@@ -369,33 +369,75 @@
 
         @media (max-width: 768px) {
             :root {
-                --card-w: 110px;
-                --card-h: 160px;
+                --card-w: 130px;
+                --card-h: 190px;
+            }
+
+            .card-row {
+                flex-wrap: wrap;
+                /* Allow wrapping on smaller screens */
+                gap: 15px;
             }
 
             .card {
                 padding: 15px 10px;
+                flex: 0 0 calc(50% - 15px);
+                /* 2 cards per row */
+                width: auto;
+                /* Override fixed width */
             }
 
             .card-icon {
-                font-size: 1.8rem;
+                font-size: 2rem;
                 margin-bottom: 10px;
             }
 
             .card-title {
-                font-size: 0.8rem;
+                font-size: 0.9rem;
             }
 
             .card-desc {
-                display: none;
+                font-size: 0.7rem;
+                line-height: 1.2;
             }
 
             header {
-                padding: 20px;
+                padding: 15px 20px;
+                margin-bottom: 10px;
+            }
+
+            .level-pill,
+            .score-display {
+                font-size: 0.9rem;
+                padding: 6px 16px;
+            }
+
+            .overlay h1 {
+                font-size: 2rem;
             }
 
             .steps {
                 flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            :root {
+                --card-h: 160px;
+                /* Even smaller for very small screens */
+            }
+
+            .zone-label {
+                margin-bottom: 10px;
+                font-size: 0.75rem;
+            }
+
+            .overlay {
+                padding: 20px;
+            }
+
+            .onboarding-card {
+                padding: 25px;
             }
         }
     </style>
