@@ -41,7 +41,6 @@
                 radial-gradient(at 0% 0%, hsla(253, 16%, 7%, 0) 0, hsla(253, 16%, 7%, 0) 50%),
                 radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 0) 0, hsla(225, 39%, 30%, 0) 50%),
                 radial-gradient(at 100% 0%, hsla(339, 49%, 30%, 0) 0, hsla(339, 49%, 30%, 0) 50%);
-            /* Subtle texture */
             color: var(--text-primary);
             height: 100vh;
             overflow: hidden;
@@ -237,7 +236,6 @@
             border: 1px solid rgba(0, 0, 0, 0.03);
             cursor: grab;
             z-index: 1;
-            /* Default stack */
         }
 
         .card:hover {
@@ -293,7 +291,6 @@
         .card.solution {
             background: white;
             position: static;
-            /* Reset for dragging logic */
         }
 
         /* --- Custom Dragging Physics --- */
@@ -306,7 +303,6 @@
                 0 18px 36px -18px rgba(0, 0, 0, 0.3);
             opacity: 0.95;
             transition: transform 0.1s linear;
-            /* Smooth follow */
         }
 
         .card.hidden {
@@ -371,7 +367,6 @@
             font-size: 1.2rem;
         }
 
-        /* Mobile Responsive */
         @media (max-width: 768px) {
             :root {
                 --card-w: 110px;
@@ -445,12 +440,15 @@
     <!-- Game End -->
     <div class="overlay" id="end-screen">
         <div class="onboarding-card">
-            <h1>Mission Accomplished! 🚀</h1>
-            <p>أنت خلصت كل المشاكل. الموقع دلوقتي Pixel Perfect!<br>
-                <strong style="font-size: 2rem; color: var(--text-primary); margin-top:10px; display:block;">Score:
-                    <span id="final-score">0</span></strong>
-            </p>
-            <button class="btn-primary" onclick="location.reload()">Play Again ↺</button>
+            <h1>ألف مبروك يا بطل! 🚀</h1>
+            <p>أنت خلصت 5 مستويات من أصعب مشاكل الـ UX.<br>دلوقتي تقدر تقول إنك فاهم يعني إيه User Experience بجد.</p>
+
+            <div style="margin: 20px 0; padding: 20px; background: var(--bg-color); border-radius: 16px;">
+                <div style="font-size: 1rem; color: var(--text-secondary);">Final Score</div>
+                <strong style="font-size: 3rem; color: var(--primary); display:block;" id="final-score">0</strong>
+            </div>
+
+            <button class="btn-primary" onclick="location.reload()">العب تاني ↺</button>
         </div>
     </div>
 
@@ -463,13 +461,10 @@
     </header>
 
     <div class="game-board">
-        <!-- Problem Zone -->
         <div>
             <div class="zone-label">⚠️ Problems (Drop Here)</div>
             <div class="card-row" id="problem-area"></div>
         </div>
-
-        <!-- Solution Zone -->
         <div>
             <div class="zone-label">🛠️ Solutions (Drag Me)</div>
             <div class="card-row" id="solution-area"></div>
@@ -482,7 +477,7 @@
     </div>
 
     <script>
-        // Levels Config
+        // Levels Config (Complete 5 Levels)
         const levels = [
             {
                 name: "Basic UI",
@@ -519,12 +514,30 @@
                     { icon: "📱", p: "Not Mobile", pDesc: "بايظ ع الموبايل", s: "Responsive", sDesc: "متجاوب 100%" },
                     { icon: "🌚", p: "No Dark Mode", pDesc: "بيوجع العين بالليل", s: "Theme System", sDesc: "دعم الثيمات" }
                 ]
+            },
+            {
+                name: "Final Boss",
+                pairs: [
+                    { icon: "🧟", p: "Dark Pattern", pDesc: "اشتراك اجباري", s: "Ethical Design", sDesc: "حرية الاختيار" },
+                    { icon: "📉", p: "High Bounce", pDesc: "الناس بتمشي", s: "Engagement", sDesc: "محتوى جذاب" },
+                    { icon: "♿", p: "No Access", pDesc: "صعب للمعاقين", s: "A11y Check", sDesc: "قارئ الشاشة" },
+                    { icon: "🕸️", p: "Legacy Code", pDesc: "كود ميت", s: "Refactor", sDesc: "تحديث شامل" }
+                ]
             }
         ];
 
         let state = { level: 0, score: 0, matches: 0 };
-        let activeDrag = null; // To store dragging info
+        let activeDrag = null;
         let ghostEl = null;
+
+        // Safe Confetti Wrapper
+        function safeConfetti(opts) {
+            if (typeof confetti === 'function') {
+                confetti(opts);
+            } else {
+                console.warn('Confetti script not loaded');
+            }
+        }
 
         function startGame() {
             document.getElementById('intro-screen').classList.remove('active');
@@ -560,7 +573,6 @@
                 `;
 
                 if (item.type === 's') {
-                    // Mouse Events for Custom Drag
                     el.addEventListener('mousedown', startDrag);
                     el.addEventListener('touchstart', startDrag, { passive: false });
                 }
@@ -568,14 +580,12 @@
             });
         }
 
-        // --- CUSTOM PHYSICS DRAG ---
         function startDrag(e) {
             e.preventDefault();
             const originalEl = e.currentTarget;
             const rect = originalEl.getBoundingClientRect();
             const touch = e.touches ? e.touches[0] : e;
 
-            // Create Ghost
             ghostEl = originalEl.cloneNode(true);
             ghostEl.classList.add('drag-proxy');
             ghostEl.style.width = rect.width + 'px';
@@ -584,7 +594,7 @@
             ghostEl.style.top = rect.top + 'px';
 
             document.body.appendChild(ghostEl);
-            originalEl.classList.add('hidden'); // Hide original
+            originalEl.classList.add('hidden');
 
             activeDrag = {
                 id: originalEl.dataset.id,
@@ -607,18 +617,15 @@
             const x = touch.clientX - activeDrag.offsetX;
             const y = touch.clientY - activeDrag.offsetY;
 
-            // Physics Tilt based on velocity/direction
             const deltaX = touch.clientX - activeDrag.startX;
             const rotate = Math.max(-15, Math.min(15, deltaX * 0.2));
 
             ghostEl.style.transform = `translate(${x - parseFloat(ghostEl.style.left)}px, ${y - parseFloat(ghostEl.style.top)}px) rotate(${rotate}deg)`;
 
-            // Highlight Drop Zones
             checkHover(touch.clientX, touch.clientY);
         }
 
         function checkHover(x, y) {
-            // Simple collision check with problem cards
             document.querySelectorAll('.card.problem').forEach(el => {
                 const rect = el.getBoundingClientRect();
                 if (x > rect.left && x < rect.right && y > rect.top && y < rect.bottom) {
@@ -636,50 +643,46 @@
             document.removeEventListener('touchmove', onDrag);
             document.removeEventListener('touchend', endDrag);
 
-            // Check Drop
             const touch = e.changedTouches ? e.changedTouches[0] : e;
             const hit = document.elementsFromPoint(touch.clientX, touch.clientY).find(el => el.classList.contains('problem'));
 
             if (hit && hit.dataset.id === activeDrag.id) {
-                // Success
                 success(hit);
             } else {
-                // Return
                 resetDrag();
             }
         }
 
         function success(targetEl) {
-            // Animate Ghost into Target
             const rect = targetEl.getBoundingClientRect();
             ghostEl.style.transition = "all 0.3s ease";
             ghostEl.style.transform = `translate(${rect.left - parseFloat(ghostEl.style.left)}px, ${rect.top - parseFloat(ghostEl.style.top)}px) scale(1)`;
             ghostEl.style.opacity = '0';
 
             targetEl.classList.remove('drag-over');
-            targetEl.style.transform = "scale(0)"; // Poof effect
+            targetEl.style.transform = "scale(0)";
 
             setTimeout(() => {
                 ghostEl.remove();
-                activeDrag.originalEl.remove();
+                if (activeDrag && activeDrag.originalEl) activeDrag.originalEl.remove();
                 targetEl.remove();
 
                 state.score += 10;
                 document.getElementById('score').innerText = state.score;
                 showToast('Correct! +10', '✅');
 
-                // Confetti
-                confetti({ particleCount: 30, spread: 50, origin: { x: (rect.left + rect.width / 2) / window.innerWidth, y: (rect.top) / window.innerHeight } });
+                safeConfetti({ particleCount: 30, spread: 50, origin: { x: (rect.left + rect.width / 2) / window.innerWidth, y: (rect.top) / window.innerHeight } });
 
                 state.matches++;
                 if (state.matches >= 4) {
-                    confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 } });
+                    safeConfetti({ particleCount: 150, spread: 100, origin: { y: 0.6 } });
+
+                    // Fixed logic for Level Complete
                     setTimeout(() => {
                         if (state.level >= levels.length - 1) {
-                            document.getElementById('end-screen').classList.add('active');
-                            document.getElementById('final-score').innerText = state.score;
+                            showEndScreen();
                         } else {
-                            document.getElementById('level-screen').classList.add('active');
+                            showLevelScreen();
                         }
                     }, 1000);
                 }
@@ -689,18 +692,26 @@
         }
 
         function resetDrag() {
-            // Snap back animation
             ghostEl.style.transition = "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
             ghostEl.style.transform = "translate(0, 0) rotate(0deg)";
 
             setTimeout(() => {
                 ghostEl.remove();
-                activeDrag.originalEl.classList.remove('hidden');
+                if (activeDrag && activeDrag.originalEl) activeDrag.originalEl.classList.remove('hidden');
                 activeDrag = null;
                 showToast('Wrong Match!', '❌');
             }, 300);
 
             document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+        }
+
+        function showLevelScreen() {
+            document.getElementById('level-screen').classList.add('active');
+        }
+
+        function showEndScreen() {
+            document.getElementById('end-screen').classList.add('active');
+            document.getElementById('final-score').innerText = state.score;
         }
 
         function nextLevel() {
