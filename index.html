@@ -4,27 +4,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Design Debt - Master Edition</title>
+    <title>Design Debt - Master Edition 🎨</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;500;700&display=swap"
         rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root {
-            --bg-color: #f8f9fa;
-            --text-color: #212529;
-            --primary-color: #2c3e50;
-            --accent-color: #3498db;
-            --success-color: #27ae60;
-            --error-color: #e74c3c;
-            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
-            --card-active-shadow: 0 10px 20px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.1);
+            --bg-color: #f0f2f5;
+            --text-color: #1f2937;
+            --primary-color: #3b82f6;
+            /* Blue-500 */
+            --primary-dark: #2563eb;
+            --success-color: #10b981;
+            /* Emerald-500 */
+            --error-color: #ef4444;
+            /* Red-500 */
+            --card-width: 150px;
+            --card-height: 220px;
         }
 
         body {
             margin: 0;
             padding: 0;
-            font-family: 'IBM Plex Sans Arabic', sans-serif;
+            font-family: 'IBM Plex Sans Arabic', sans-serif; // Consistent font
             background-color: var(--bg-color);
             color: var(--text-color);
             height: 100vh;
@@ -32,30 +36,32 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
         }
 
-        /* Introduction Overlap */
+        /* Introduction Overlay */
         .overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(5px);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            z-index: 1000;
+            z-index: 2000;
             text-align: center;
             padding: 20px;
+            animation: fadeIn 0.5s ease-out;
         }
 
         .overlay h1 {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            color: var(--primary-color);
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            color: var(--primary-dark);
+            text-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .overlay p {
@@ -63,160 +69,189 @@
             max-width: 600px;
             line-height: 1.6;
             margin-bottom: 30px;
+            color: #4b5563;
         }
 
         .btn {
-            padding: 15px 40px;
+            padding: 16px 48px;
             font-size: 1.2rem;
-            background: var(--primary-color);
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
             color: white;
             border: none;
             border-radius: 50px;
             cursor: pointer;
             font-family: inherit;
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 4px 15px rgba(44, 62, 80, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.5);
+            position: relative;
+            overflow: hidden;
         }
 
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(44, 62, 80, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px -5px rgba(59, 130, 246, 0.6);
         }
 
-        /* Game Header */
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        /* Header */
         header {
-            width: 90%;
+            width: 100%;
             max-width: 1200px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 0;
-            border-bottom: 2px solid #e9ecef;
-            margin-bottom: 20px;
+            padding: 20px 40px;
+            box-sizing: border-box;
+            background: white;
+            margin-top: 20px;
+            border-radius: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
 
         .level-badge {
-            background: var(--accent-color);
-            color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 0.9rem;
+            background: #e0e7ff;
+            color: var(--primary-dark);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
         }
 
         .score-display {
             font-size: 1.5rem;
-            font-weight: bold;
+            font-weight: 800;
+            color: var(--text-color);
+        }
+
+        .score-val {
             color: var(--primary-color);
         }
 
-        /* Game Area */
+        /* Game Board */
         .game-board {
             width: 100%;
             max-width: 1200px;
-            height: 70vh;
+            flex-grow: 1;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: space-evenly;
             padding: 20px;
             box-sizing: border-box;
+            perspective: 1000px;
         }
 
         .zone-label {
             text-align: center;
-            font-size: 1rem;
-            color: #bdc3c7;
+            font-size: 0.9rem;
+            color: #9ca3af;
             text-transform: uppercase;
             letter-spacing: 2px;
             margin-bottom: 15px;
-            font-weight: 500;
+            font-weight: 700;
         }
 
         .card-row {
             display: flex;
             justify-content: center;
-            gap: 20px;
-            min-height: 220px;
-            perspective: 1000px;
+            gap: 25px;
+            min-height: 240px;
         }
 
-        /* Card Styles */
+        /* ---- AMAZING CARD STYLES ---- */
         .card {
-            width: 160px;
-            height: 240px;
+            width: var(--card-width);
+            height: var(--card-height);
             background: white;
-            border-radius: 12px;
-            box-shadow: var(--card-shadow);
+            border-radius: 16px;
+            box-shadow:
+                0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                0 2px 4px -1px rgba(0, 0, 0, 0.06),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+            /* Inner highlight */
             display: flex;
             flex-direction: column;
             align-items: center;
             padding: 20px;
             text-align: center;
             cursor: grab;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
             user-select: none;
-            border: 1px solid #eee;
+            border: 1px solid rgba(0, 0, 0, 0.05);
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--card-active-shadow);
+        /* Floating Animation */
+        .card:not(.dragging):not(.problem):hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
 
+        /* Dragging State - The magic feel */
         .card.dragging {
-            opacity: 0.5;
-            transform: scale(0.95);
+            opacity: 0.9;
+            transform: scale(1.1) rotate(5deg) !important;
+            /* Tilt while dragging */
             cursor: grabbing;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            z-index: 100;
         }
 
-        .card-type {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            color: #95a5a6;
+        .card-icon {
+            font-size: 2rem;
             margin-bottom: 10px;
-            font-weight: bold;
-            letter-spacing: 1px;
+            opacity: 0.8;
         }
 
         .card-title {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 10px;
-            line-height: 1.4;
+            color: var(--text-color);
+            margin-bottom: 8px;
+            line-height: 1.3;
         }
 
         .card-desc {
-            font-size: 0.85rem;
-            color: #7f8c8d;
-            line-height: 1.5;
+            font-size: 0.75rem;
+            color: #6b7280;
+            line-height: 1.4;
         }
 
-        /* Problem Card specific */
+        /* Problem Card (Target) */
         .card.problem {
-            border-top: 5px solid var(--error-color);
-            background: #fff5f5;
-            /* Slight red tint */
+            background: linear-gradient(180deg, #fff5f5 0%, #fff 100%);
+            border-top: 4px solid var(--error-color);
+            /* Dashed border to indicate drop zone visually */
+            border-bottom: 2px dashed #fed7d7;
         }
 
-        /* Solution Card specific */
+        .card.problem.drag-over {
+            transform: scale(1.05);
+            background: #fff0f0;
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2);
+            border-color: var(--error-color);
+        }
+
+        /* Solution Card (Draggable) */
         .card.solution {
-            border-top: 5px solid var(--success-color);
-            background: #f0fff4;
-            /* Slight green tint */
+            background: linear-gradient(180deg, #f0fdf4 0%, #fff 100%);
+            border-top: 4px solid var(--success-color);
         }
 
-        /* Feedback Animations */
-        @keyframes successPop {
+        /* Success Animation css */
+        @keyframes popSuccess {
             0% {
                 transform: scale(1);
                 opacity: 1;
             }
 
             50% {
-                transform: scale(1.1);
-                opacity: 0.8;
+                transform: scale(1.2);
+                opacity: 0;
             }
 
             100% {
@@ -225,101 +260,104 @@
             }
         }
 
-        @keyframes failShake {
-            0% {
-                transform: translateX(0);
-            }
+        .matched {
+            animation: popSuccess 0.4s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+        }
 
-            25% {
-                transform: translateX(-10px);
-            }
+        /* Fail Shake */
+        @keyframes shake {
 
-            50% {
-                transform: translateX(10px);
-            }
-
-            75% {
-                transform: translateX(-10px);
-            }
-
+            0%,
             100% {
                 transform: translateX(0);
             }
+
+            10%,
+            30%,
+            50%,
+            70%,
+            90% {
+                transform: translateX(-4px);
+            }
+
+            20%,
+            40%,
+            60%,
+            80% {
+                transform: translateX(4px);
+            }
         }
 
-        .animate-success {
-            animation: successPop 0.5s forwards ease-in;
-        }
-
-        .animate-fail {
-            animation: failShake 0.4s ease-in-out;
+        .shake-it {
+            animation: shake 0.4s cubic-bezier(.36, .07, .19, .97) both;
             border-color: var(--error-color) !important;
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2) !important;
         }
 
-        .drag-target {
-            border: 2px dashed #bdc3c7;
-            background: rgba(0, 0, 0, 0.02);
-        }
-
-        .drag-over {
-            border-color: var(--accent-color);
-            background: rgba(52, 152, 219, 0.1);
-            transform: scale(1.02);
-        }
-
-        /* Toast Notification */
+        /* Toast */
         .toast {
             position: fixed;
-            bottom: 30px;
+            bottom: 40px;
             left: 50%;
             transform: translateX(-50%) translateY(100px);
-            background: var(--primary-color);
-            color: white;
+            background: white;
+            color: var(--text-color);
             padding: 12px 30px;
             border-radius: 50px;
-            font-weight: 500;
-            opacity: 0;
-            transition: all 0.3s;
-            z-index: 2000;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            font-weight: 600;
+            font-size: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 3000;
+            border: 1px solid #e5e7eb;
         }
 
         .toast.visible {
             transform: translateX(-50%) translateY(0);
-            opacity: 1;
         }
 
         .toast.success {
-            background: var(--success-color);
+            border-left: 5px solid var(--success-color);
         }
 
         .toast.error {
-            background: var(--error-color);
+            border-left: 5px solid var(--error-color);
         }
 
-        /* Media Queries */
+        /* Responsive */
         @media (max-width: 768px) {
+            :root {
+                --card-width: 100px;
+                --card-height: 140px;
+            }
+
             .card {
-                width: 130px;
-                height: 180px;
                 padding: 10px;
             }
 
+            .card-icon {
+                font-size: 1.5rem;
+            }
+
             .card-title {
-                font-size: 0.9rem;
+                font-size: 0.8rem;
             }
 
             .card-desc {
                 display: none;
             }
 
-            h1 {
-                font-size: 2rem;
+            /* Hide desc on mobile */
+            header {
+                padding: 15px;
             }
 
-            .game-board {
-                height: 80vh;
-                padding: 10px;
+            h1 {
+                font-size: 2rem;
             }
         }
     </style>
@@ -327,299 +365,250 @@
 
 <body>
 
-    <!-- Intro / Rules Overlay -->
+    <!-- Overlays -->
     <div class="overlay" id="intro-screen">
-        <h1>Design Debt 🃏</h1>
-        <p>أهلاً بيك يا فنان! دي مش مجرد لعبة، ده تدريب حقيقي.</p>
-        <p>
-            <strong>القواعد:</strong><br>
-            1. اسحب كارت "الحل" (الأخضر) وحطه فوق كارت "المشكلة" (الأحمر).<br>
-            2. كل حل صح = <strong>+10 نقط</strong>.<br>
-            3. أي غلطة = <strong>-5 نقط</strong>.<br>
-            4. عندك <strong>5 مستويات</strong>، الصعوبة بتزيد مع كل مرحلة.
-        </p>
-        <button class="btn" onclick="startGame()">يلا نبدأ 🚀</button>
+        <h1 style="font-family: 'IBM Plex Sans Arabic';">Design Debt 🃏</h1>
+        <p>مرحباً بك في تحدي الـ UX الأقوى.<br>مهمتك: تنضيف الديون التقنية ومشاكل التصميم.</p>
+        <button class="btn" onclick="startGame()">ابدأ التحدي 🚀</button>
     </div>
 
-    <!-- Level Complete Overlay -->
     <div class="overlay" id="level-screen" style="display: none;">
-        <h1>عاش يا وحش! 🎉</h1>
-        <p id="level-msg">خلصت المستوى ده بنجاح.</p>
-        <button class="btn" onclick="nextLevel()">المستوى اللي بعده ⏭️</button>
+        <h1>عظيييم! 🎉</h1>
+        <p id="level-msg">أنجزت المستوى بنجاح.</p>
+        <button class="btn" onclick="nextLevel()">المستوى التالي ⏭️</button>
     </div>
 
-    <!-- Game Over Overlay -->
     <div class="overlay" id="end-screen" style="display: none;">
-        <h1>اللعبة خلصت! 🏆</h1>
-        <p>السكور النهائي: <strong id="final-score" style="font-size: 2rem; display:block; margin-top:10px;">0</strong>
-        </p>
+        <h1>أسطورة! 🏆</h1>
+        <p>أنت خلصت كل المشاكل. الموقع بقى فلة!<br>السكور النهائي: <strong id="final-score"
+                style="color:var(--primary-color); font-size:2rem;">0</strong></p>
         <button class="btn" onclick="location.reload()">العب تاني 🔄</button>
     </div>
 
+    <!-- UI -->
     <header>
-        <div>
-            <span class="level-badge" id="level-indicator">المستوى 1</span>
-        </div>
-        <div class="score-display">النقاط: <span id="score">0</span></div>
+        <div class="level-badge" id="level-indicator">Level 1</div>
+        <div class="score-display">Points: <span id="score" class="score-val">0</span></div>
     </header>
 
     <div class="game-board">
-        <!-- Problem Zone (Drop Targets) -->
+        <!-- Drop Zone -->
         <div>
-            <div class="zone-label">المشاكل (حط الحل هنا)</div>
+            <div class="zone-label">⚠️ المشاكل (ارم هنا)</div>
             <div class="card-row" id="problem-area"></div>
         </div>
 
-        <!-- Solution Zone (Draggables) -->
+        <!-- Drag Zone -->
         <div>
-            <div class="zone-label">كروت الحل (اسحب الكارت)</div>
+            <div class="zone-label">💡 الحلول (اسحب)</div>
             <div class="card-row" id="solution-area"></div>
         </div>
     </div>
 
-    <div class="toast" id="toast">رسالة</div>
+    <div class="toast" id="toast">Ready</div>
 
     <script>
-        // --- Levels Data (Progressive Difficulty) ---
+        // Levels with Icons
         const levels = [
             {
-                name: "Level 1: الأساسيات (Visuals)",
+                name: "Basic UI",
                 pairs: [
-                    { p: { text: "Low Contrast", desc: "الكلام رمادي على خلفية رمادي!" }, s: { text: "High Contrast", desc: "خلي الكلام أسود وواضح" } },
-                    { p: { text: "Broken Image", desc: "أيقونة صورة مش بتحمل" }, s: { text: "Alt Text", desc: "وصف للصورة لو وقعت" } },
-                    { p: { text: "Tiny Font", desc: "خط حجمه 10px مش يتشاف" }, s: { text: "16px Base", desc: "كبر الخط للقراءة" } },
-                    { p: { text: "Blue Link", desc: "لينك أزرق على خلفية زرقاء" }, s: { text: "Color Theory", desc: "استخدم ألوان مكملة" } }
+                    { p: { icon: "👁️", text: "Low Contrast", desc: "رمادي على رمادي" }, s: { icon: "✨", text: "High Contrast", desc: "أسود واضح" } },
+                    { p: { icon: "🖼️", text: "Broken Img", desc: "أيقونة مكسورة" }, s: { icon: "📝", text: "Alt Text", desc: "نص بديل" } },
+                    { p: { icon: "🔍", text: "Tiny Font", desc: "خط نملة 10px" }, s: { icon: "A+", text: "Readable", desc: "خط 16px+" } },
+                    { p: { icon: "🎨", text: "Bad Colors", desc: "ألوان بتوجع العين" }, s: { icon: "🎭", text: "Palette", desc: "ألوان متناسقة" } }
                 ]
             },
             {
-                name: "Level 2: التوهان (Navigation)",
+                name: "Navigation",
                 pairs: [
-                    { p: { text: "Dead End", desc: "صفحة ملهاش زرار خروج" }, s: { text: "Back Button", desc: "زرار يرجعك للي قبله" } },
-                    { p: { text: "Mystery Meat", desc: "زرار مش مكتوب عليه بيعمل ايه" }, s: { text: "Labeling", desc: "اكتب اسم الزرار بوضوح" } },
-                    { p: { text: "Burger Menu", desc: "القائمة مخفية في الديسك توب" }, s: { text: "Visible Links", desc: "طلع اللينكات المهمة بره" } },
-                    { p: { text: "404 Error", desc: "صفحة مش موجودة" }, s: { text: "Redirection", desc: "وديه للصفحة الرئيسية" } }
+                    { p: { icon: "🚫", text: "Dead End", desc: "مفيش خروج" }, s: { icon: "🔙", text: "Back Btn", desc: "زرار رجوع" } },
+                    { p: { icon: "❓", text: "Mystery Btn", desc: "زرار مش مفهوم" }, s: { icon: "🏷️", text: "Label", desc: "اسم واضح" } },
+                    { p: { icon: "🍔", text: "Hidden Menu", desc: "مينيو مخفية" }, s: { icon: "👀", text: "Visible", desc: "لينكات ظاهرة" } },
+                    { p: { icon: "🚧", text: "404 Page", desc: "صفحة فاضية" }, s: { icon: "🔗", text: "Redirect", desc: "تحويل للرئيسية" } }
                 ]
             },
             {
-                name: "Level 3: السرعة (Performance)",
+                name: "Performance",
                 pairs: [
-                    { p: { text: "Slow Loading", desc: "الموقع بياخد 10 ثواني" }, s: { text: "Lazy Load", desc: "حمل الصور لما نحتاجها بس" } },
-                    { p: { text: "Huge Video", desc: "فيديو 500 ميجا في الهيدر" }, s: { text: "Compression", desc: "اضغط الفيديو لـ WebM" } },
-                    { p: { text: "Render Block", desc: "الشاشة بيضاء لحد ما يحمل" }, s: { text: "Async JS", desc: "حمل السكريبت في الخلفية" } },
-                    { p: { text: "CLS Shift", desc: "العناصر بتنط لما تحمل" }, s: { text: "Dimensions", desc: "حجز مكان للصور" } }
+                    { p: { icon: "🐌", text: "Slow Load", desc: "10 ثواني تحميل" }, s: { icon: "⚡", text: "Lazy Load", desc: "تحميل ذكي" } },
+                    { p: { icon: "📹", text: "Huge Video", desc: "فيديو 500MB" }, s: { icon: "📦", text: "Compress", desc: "ضغط الفيديو" } },
+                    { p: { icon: "🧱", text: "Blocking", desc: "شاشة بيضاء" }, s: { icon: "🔄", text: "Async", desc: "تحميل في الخلفية" } },
+                    { p: { icon: "📏", text: "Layout Shift", desc: "العناصر بتنط" }, s: { icon: "📐", text: "Fixed Size", desc: "أبعاد ثابتة" } }
                 ]
             },
             {
-                name: "Level 4: الكلام (Content)",
+                name: "Content",
                 pairs: [
-                    { p: { text: "Lorem Ipsum", desc: "كلام وهمي نسيناه" }, s: { text: "Real Content", desc: "اكتب محتوى حقيقي ومفيد" } },
-                    { p: { text: "Jargon", desc: "Error 0x544F Bad Gateway!" }, s: { text: "Human Design", desc: "السيرفر واقع.. جرب تاني" } },
-                    { p: { text: "Click Here", desc: "لينك اسمه 'اضغط هنا'" }, s: { text: "Descriptive", desc: "لينك 'حمل الملف'" } },
-                    { p: { text: "Wall of Text", desc: "20 سطر ورا بعض" }, s: { text: "Typography", desc: "قسم الكلام لعناوين ونقط" } }
+                    { p: { icon: "💬", text: "Lorem Ipsum", desc: "نص تجريبي" }, s: { icon: "✍️", text: "Real Copy", desc: "محتوى حقيقي" } },
+                    { p: { icon: "🤖", text: "Error 0x54", desc: "كود محدش فاهمه" }, s: { icon: "😊", text: "Friendly", desc: "رسالة لطيفة" } },
+                    { p: { icon: "🔗", text: "Click Here", desc: "اضغط هنا" }, s: { icon: "📥", text: "Download", desc: "حمل الملف" } },
+                    { p: { icon: "🧱", text: "Wall of Text", desc: "بلوك نص كبير" }, s: { icon: "📑", text: "Headers", desc: "عناوين ونقط" } }
                 ]
             },
             {
-                name: "Level 5: الوحش (System Architecture)",
+                name: "Security & Scale",
                 pairs: [
-                    { p: { text: "Spaghetti Code", desc: "كود متداخل وصعب التعديل" }, s: { text: "Refactoring", desc: "نظم الكود في Modules" } },
-                    { p: { text: "Security Leak", desc: "الباسورد باين في اللينك" }, s: { text: "Encryption", desc: "شفر البيانات المهمة" } },
-                    { p: { text: "Not Responsive", desc: "الموقع بايظ على الموبايل" }, s: { text: "Media Queries", desc: "ظبط المقاسات لكل شاشة" } },
-                    { p: { text: "No Feedback", desc: "دوست ومحصلش حاجة" }, s: { text: "States", desc: "Loading Spinner أو رسالة" } }
+                    { p: { icon: "🍝", text: "Spaghetti", desc: "كود متداخل" }, s: { icon: "🏗️", text: "Modular", desc: "نظام مودرن" } },
+                    { p: { icon: "🔓", text: "Exposed API", desc: "مفتاح سري" }, s: { icon: "🔒", text: "Encryption", desc: "تشفير" } },
+                    { p: { icon: "📱", text: "Non-Responsive", desc: "مش شغال موبايل" }, s: { icon: "📐", text: "Responsive", desc: "متجاوب" } },
+                    { p: { icon: "😶", text: "No Feedback", desc: "مفيش رد فعل" }, s: { icon: "⏳", text: "Vizu", desc: "لويينج" } }
                 ]
             }
         ];
 
-        // --- Game State ---
-        let currentLevelIndex = 0;
-        let score = 0;
-        let matchesInLevel = 0;
-        let draggedCard = null;
+        let state = {
+            level: 0,
+            score: 0,
+            matches: 0
+        };
 
-        // --- Init ---
         function startGame() {
             document.getElementById('intro-screen').style.display = 'none';
-            initLevel(0);
+            loadLevel(0);
         }
 
-        function initLevel(index) {
-            currentLevelIndex = index;
-            matchesInLevel = 0;
-            const levelData = levels[index];
+        function loadLevel(idx) {
+            state.level = idx;
+            state.matches = 0;
+            const lvl = levels[idx];
 
-            // UI Updates
-            document.getElementById('level-indicator').innerText = `المستوى ${index + 1} / 5`;
+            document.getElementById('level-indicator').innerText = `Level ${idx + 1}: ${lvl.name}`;
             document.getElementById('level-screen').style.display = 'none';
-            showToast(levelData.name + " .. ابدأ!", 3000);
 
-            // Prepare Cards
-            const problems = [];
-            const solutions = [];
+            // Prepare Data
+            const problems = lvl.pairs.map((pair, i) => ({ ...pair.p, id: i, type: 'p' }));
+            const solutions = lvl.pairs.map((pair, i) => ({ ...pair.s, id: i, type: 's' }));
 
-            // Add index to create match ID logic
-            levelData.pairs.forEach((pair, i) => {
-                problems.push({ ...pair.p, matchId: i, type: 'problem' });
-                solutions.push({ ...pair.s, matchId: i, type: 'solution' });
+            // Render
+            renderCards('problem-area', problems.sort(() => .5 - Math.random()));
+            renderCards('solution-area', solutions.sort(() => .5 - Math.random()));
+        }
+
+        function renderCards(containerId, items) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            items.forEach(item => {
+                const el = document.createElement('div');
+                el.className = `card ${item.type === 'p' ? 'problem' : 'solution'}`;
+                if (item.type === 's') el.draggable = true;
+
+                el.dataset.id = item.id;
+                el.innerHTML = `
+                    <div class="card-icon">${item.icon}</div>
+                    <div class="card-title">${item.text}</div>
+                    <div class="card-desc">${item.desc}</div>
+                `;
+
+                // Events
+                if (item.type === 'p') {
+                    el.addEventListener('dragover', e => {
+                        e.preventDefault();
+                        el.classList.add('drag-over');
+                    });
+                    el.addEventListener('dragleave', () => el.classList.remove('drag-over'));
+                    el.addEventListener('drop', handleDrop);
+                } else {
+                    el.addEventListener('dragstart', e => {
+                        e.dataTransfer.setData('text/plain', item.id);
+                        el.classList.add('dragging');
+                    });
+                    el.addEventListener('dragend', () => el.classList.remove('dragging'));
+                }
+
+                container.appendChild(el);
             });
-
-            // Shuffle
-            problems.sort(() => Math.random() - 0.5);
-            solutions.sort(() => Math.random() - 0.5);
-
-            renderCards(problems, solutions);
-        }
-
-        function renderCards(problems, solutions) {
-            const problemArea = document.getElementById('problem-area');
-            const solutionArea = document.getElementById('solution-area');
-
-            problemArea.innerHTML = '';
-            solutionArea.innerHTML = '';
-
-            // Render Problems (Targets)
-            problems.forEach(p => {
-                const el = createCard(p);
-                el.classList.add('problem');
-                // Drag Events for Drop Target
-                el.addEventListener('dragover', handleDragOver);
-                el.addEventListener('dragleave', handleDragLeave);
-                el.addEventListener('drop', handleDrop);
-                problemArea.appendChild(el);
-            });
-
-            // Render Solutions (Draggables)
-            solutions.forEach(s => {
-                const el = createCard(s);
-                el.classList.add('solution');
-                el.setAttribute('draggable', 'true');
-                // Drag Events for Draggable
-                el.addEventListener('dragstart', handleDragStart);
-                el.addEventListener('dragend', handleDragEnd);
-                solutionArea.appendChild(el);
-            });
-        }
-
-        function createCard(data) {
-            const el = document.createElement('div');
-            el.className = 'card';
-            el.dataset.matchId = data.matchId;
-            el.dataset.type = data.type;
-
-            el.innerHTML = `
-                <div class="card-type">${data.type === 'problem' ? 'مشكلة' : 'حل'}</div>
-                <div class="card-title">${data.text}</div>
-                <div class="card-desc">${data.desc}</div>
-            `;
-            return el;
-        }
-
-        // --- Drag & Drop Logic ---
-        function handleDragStart(e) {
-            draggedCard = e.target;
-            e.target.classList.add('dragging');
-            e.dataTransfer.setData('text/plain', e.target.dataset.matchId);
-            e.dataTransfer.effectAllowed = 'move';
-        }
-
-        function handleDragEnd(e) {
-            e.target.classList.remove('dragging');
-            draggedCard = null;
-        }
-
-        function handleDragOver(e) {
-            e.preventDefault(); // Essential to allow dropping
-            const card = e.currentTarget;
-            if (card.classList.contains('problem') && !card.classList.contains('animate-success')) {
-                card.classList.add('drag-over');
-            }
-        }
-
-        function handleDragLeave(e) {
-            e.currentTarget.classList.remove('drag-over');
         }
 
         function handleDrop(e) {
             e.preventDefault();
-            const targetCard = e.currentTarget;
-            targetCard.classList.remove('drag-over');
+            const target = e.currentTarget;
+            target.classList.remove('drag-over');
 
-            const solutionMatchId = e.dataTransfer.getData('text/plain');
-            const targetMatchId = targetCard.dataset.matchId;
+            const dropId = target.dataset.id;
+            const dragId = e.dataTransfer.getData('text/plain');
 
-            if (solutionMatchId === targetMatchId) {
-                // MATCH!
-                handleSuccess(targetCard, draggedCard);
+            if (!dragId) return; // Ghost drag check
+
+            // Find solution card element (the one being dragged)
+            // Note: dragend removes 'dragging' class, so we might need selector by data-id in solution area
+            const draggedEl = document.querySelector(`.card.solution[data-id="${dragId}"]`);
+
+            if (dropId === dragId) {
+                // Success
+                state.score += 10;
+                updateScore();
+                showToast("Correct! +10", "success");
+
+                target.classList.add('matched');
+                draggedEl.classList.add('matched');
+
+                // Confetti Burst for single match
+                confetti({
+                    particleCount: 50,
+                    spread: 60,
+                    origin: { y: 0.7 }
+                });
+
+                state.matches++;
+                if (state.matches === 4) completeLevel();
+
             } else {
-                // FAIL
-                handleFail(targetCard);
+                // Fail
+                state.score -= 5;
+                updateScore();
+                showToast("Try Again -5", "error");
+                target.classList.add('shake-it');
+                setTimeout(() => target.classList.remove('shake-it'), 500);
             }
         }
 
-        // --- Game Logic ---
-        function handleSuccess(problemCard, solutionCard) {
-            updateScore(10);
-            showToast("إجابة صحيحة! +10", 1500, true);
+        function updateScore() {
+            document.getElementById('score').innerText = state.score;
+        }
 
-            // Animate
-            problemCard.classList.add('animate-success');
-            solutionCard.classList.add('animate-success');
+        function showToast(msg, type) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.className = `toast visible ${type}`;
+            setTimeout(() => toast.classList.remove('visible'), 1500);
+        }
 
-            // Wait for anim then remove
+        function completeLevel() {
             setTimeout(() => {
-                problemCard.style.visibility = 'hidden';
-                solutionCard.style.visibility = 'hidden'; // Hide but keep layout or remove? 
-                // Let's remove from dom to clean up space
-                problemCard.remove();
-                solutionCard.remove();
+                // BIG CELEBRATION
+                var duration = 3 * 1000;
+                var animationEnd = Date.now() + duration;
+                var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
 
-                matchesInLevel++;
-                checkLevelComplete();
-            }, 500);
-        }
-
-        function handleFail(problemCard) {
-            updateScore(-5);
-            showToast("خطأ! ركز شوية -5", 1500, false);
-
-            problemCard.classList.add('animate-fail');
-            setTimeout(() => problemCard.classList.remove('animate-fail'), 400);
-        }
-
-        function updateScore(points) {
-            score += points;
-            document.getElementById('score').innerText = score;
-        }
-
-        function checkLevelComplete() {
-            if (matchesInLevel === 4) { // 4 pairs per level
-                setTimeout(() => {
-                    if (currentLevelIndex < levels.length - 1) {
-                        document.getElementById('level-screen').style.display = 'flex';
-                        document.getElementById('level-msg').innerText = `خلصت المستوى ${currentLevelIndex + 1} بنجاح!`;
-                    } else {
-                        endGame();
+                var interval = setInterval(function () {
+                    var timeLeft = animationEnd - Date.now();
+                    if (timeLeft <= 0) {
+                        return clearInterval(interval);
                     }
-                }, 500);
-            }
+                    var particleCount = 50 * (timeLeft / duration);
+                    confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+                    confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+                }, 250);
+
+                if (state.level < levels.length - 1) {
+                    document.getElementById('level-screen').style.display = 'flex';
+                } else {
+                    document.getElementById('end-screen').style.display = 'flex';
+                    document.getElementById('final-score').innerText = state.score;
+                }
+            }, 1000);
         }
 
         function nextLevel() {
-            initLevel(currentLevelIndex + 1);
+            loadLevel(state.level + 1);
         }
 
-        function endGame() {
-            document.getElementById('end-screen').style.display = 'flex';
-            document.getElementById('final-score').innerText = score;
+        function randomInRange(min, max) {
+            return Math.random() * (max - min) + min;
         }
 
-        function showToast(msg, duration, isSuccess) {
-            const toast = document.getElementById('toast');
-            toast.innerText = msg;
-            toast.className = `toast visible ${isSuccess === true ? 'success' : isSuccess === false ? 'error' : ''}`;
-
-            setTimeout(() => {
-                toast.classList.remove('visible');
-            }, duration);
-        }
     </script>
 </body>
 
