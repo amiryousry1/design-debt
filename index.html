@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ديزاين ديت - Design Debt</title>
+    <style>
+        :root {
+            --bg-color: #1e1e1e;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --neon-green: #00ff9d;
+            --neon-red: #ff0055;
+            --neon-blue: #00d2ff;
+            --text-color: #ffffff;
+            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Scanlines Effect */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                rgba(255, 255, 255, 0),
+                rgba(255, 255, 255, 0) 50%,
+                rgba(0, 0, 0, 0.2) 50%,
+                rgba(0, 0, 0, 0.2)
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border-bottom: var(--glass-border);
+            z-index: 20;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            text-shadow: 0 0 10px var(--neon-blue);
+            letter-spacing: 1px;
+        }
+
+        .score-board {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--neon-green);
+        }
+
+        .game-area {
+            flex-grow: 1;
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+            box-sizing: border-box;
+            z-index: 15;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 0.9rem;
+            opacity: 0.7;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .card-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            min-height: 160px; /* Placeholder height */
+        }
+
+        .card {
+            width: 130px;
+            height: 180px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: var(--glass-border);
+            backdrop-filter: blur(5px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            user-select: none;
+        }
+
+        .card:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+        }
+
+        .card.problem {
+            border-bottom: 4px solid var(--neon-red);
+        }
+
+        .card.problem h3 {
+            color: var(--neon-red);
+            font-family: 'Courier New', monospace; /* Glitch tech vibe */
+        }
+
+        .card.solution {
+            border-bottom: 4px solid var(--neon-green);
+        }
+
+        .card.solution.selected {
+            box-shadow: 0 0 20px var(--neon-green);
+            border: 2px solid var(--neon-green);
+            background: rgba(0, 255, 157, 0.1);
+        }
+
+        .card h3 {
+            margin: 0 0 10px 0;
+            font-size: 1rem;
+        }
+
+        .card p {
+            margin: 0;
+            font-size: 0.8rem;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+
+        /* Animations */
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+
+        @keyframes pop {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+            100% { transform: scale(0); opacity: 0; }
+        }
+
+        .shake {
+            animation: shake 0.4s ease-in-out;
+            border-color: var(--neon-red) !important;
+        }
+
+        .pop {
+            animation: pop 0.4s forwards;
+        }
+
+        .controls {
+            padding: 20px;
+            z-index: 20;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+        }
+
+        button {
+            background: transparent;
+            color: var(--neon-green);
+            font-family:inherit;
+            font-size: 1.1rem;
+            padding: 12px 30px;
+            border: 2px solid var(--neon-green);
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: 0.3s;
+            box-shadow: 0 0 10px rgba(0, 255, 157, 0.2);
+        }
+
+        button:hover {
+            background: var(--neon-green);
+            color: black;
+            box-shadow: 0 0 20px rgba(0, 255, 157, 0.6);
+        }
+
+        .toast {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px 40px;
+            background: rgba(0,0,0,0.9);
+            border: 1px solid var(--neon-blue);
+            color: white;
+            font-size: 2rem;
+            border-radius: 10px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 100;
+            text-align: center;
+        }
+
+        @media (max-width: 600px) {
+            .card {
+                width: 90px;
+                height: 120px;
+                font-size: 0.8rem;
+            }
+            .card h3 { font-size: 0.9rem; }
+            .card p { font-size: 0.7rem; display: none; } /* Hide description on small screens */
+            .game-area { gap: 10px; padding: 10px; }
+            h1 { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>ديزاين ديت 💀</h1>
+        <div class="score-board">النتيجة: <span id="score">0</span></div>
+    </header>
+
+    <div class="game-area">
+        <!-- Table Area -->
+        <div>
+            <div class="section-title">مشاكل الموقع (عايزة حل)</div>
+            <div class="card-container" id="table-cards">
+                <!-- Cards injected here -->
+            </div>
+        </div>
+
+        <!-- Player Hand -->
+        <div>
+            <div class="section-title">حلولك (اختار وكمل التصميم)</div>
+            <div class="card-container" id="hand-cards">
+                <!-- Cards injected here -->
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">عاش يا مصمم!</div>
+
+    <div class="controls">
+        <button onclick="initGame()">العب تاني 🔄</button>
+    </div>
+
+    <script>
+        // --- Game Data (Egyptian Slang UX) ---
+        // Categories: Technical, Visual, UX, Content
+        const problemData = [
+            { id: 'p1', text: 'الصفحة ضربت (404)', category: 'Technical', desc: 'اللينك بايظ واليوزر تايه' },
+            { id: 'p2', text: 'الكلام مش باين', category: 'Visual', desc: 'الخلفية غامقة والخط أسود!' },
+            { id: 'p3', text: 'الزرار فين؟', category: 'UX', desc: 'اليوزر مش لاقي زرار الشراء' },
+            { id: 'p4', text: 'الموقع تقيل', category: 'Technical', desc: 'الصور مساحتها 5 ميجا!' },
+            { id: 'p5', text: 'كلام مش مفهوم', category: 'Content', desc: 'مصطلحات معقدة محدش فاهمها' },
+            { id: 'p6', text: 'مش عارف ارجع', category: 'UX', desc: 'دخلت صفحة ومش لاقي خروج' },
+            { id: 'p7', text: 'فورم طويلة أوي', category: 'UX', desc: '20 خانة عشان يسجل دخول' },
+            { id: 'p8', text: 'الصور مكسرة', category: 'Visual', desc: 'الصور مش راضية تحمل' },
+        ];
+
+        const solutionData = [
+            { id: 's1', text: 'وديه صفحة تانية', category: 'Technical', desc: 'Redirect لصفحة شغالة' },
+            { id: 's2', text: 'ظبط الكونتراست', category: 'Visual', desc: 'خلي الكلام أبيض وواضح' },
+            { id: 's3', text: 'خلى الاكشن واضح', category: 'UX', desc: 'CTA بلون مميز وكبير' },
+            { id: 's4', text: 'ضغط الصور', category: 'Technical', desc: 'استخدم صيغة WebP' },
+            { id: 's5', text: 'بسط المعلومة', category: 'Content', desc: 'اكتب بالبلدي يا سيدي' },
+            { id: 's6', text: 'زرار رجوع', category: 'UX', desc: 'Breadcrumbs أو زرار Back' },
+            { id: 's7', text: 'قلل الخانات', category: 'UX', desc: 'الاسم والايميل بس كفاية' },
+            { id: 's8', text: 'Placeholder', category: 'Visual', desc: 'حط لون لحد ما الصورة تظهر' },
+        ];
+
+        // --- Game State ---
+        let deck = [];
+        let tableCards = [];
+        let handCards = [];
+        let selectedSolution = null;
+        let score = 0;
+
+        // --- Init ---
+        function initGame() {
+            // Reset state
+            score = 0;
+            selectedSolution = null;
+            updateScore(0);
+            
+            // Create deck pairs and shuffle
+            // We duplicate data to make a bigger deck if needed, but for now 1-to-1 mapping
+            let problems = [...problemData];
+            let solutions = [...solutionData];
+            
+            // Shuffle
+            problems.sort(() => Math.random() - 0.5);
+            solutions.sort(() => Math.random() - 0.5);
+
+            // Deal initial hands
+            tableCards = problems.slice(0, 4);
+            handCards = solutions.slice(0, 4);
+            
+            // Remaining (not really using a draw pile logic strictly like Solitaire, 
+            // but simplified for the "Debt" concept: clear what you see)
+            // For a longer game, we'd implement a full deck array. 
+            // Let's keep it simple: 4 vs 4. Win when matched. 
+            // Actually user asked for "Refilling", so let's use the rest as a "Draw Pile".
+            deck = {
+                problems: problems.slice(4),
+                solutions: solutions.slice(4)
+            };
+
+            render();
+            showToast("يلا بينا ننضف الـ UX!", 2000);
+        }
+
+        // --- Render ---
+        function render() {
+            const tableContainer = document.getElementById('table-cards');
+            const handContainer = document.getElementById('hand-cards');
+
+            tableContainer.innerHTML = '';
+            handContainer.innerHTML = '';
+
+            // Render Table (Problems)
+            tableCards.forEach(card => {
+                const cardEl = createCardElement(card, 'problem');
+                cardEl.onclick = () => handleTableClick(card, cardEl);
+                tableContainer.appendChild(cardEl);
+            });
+
+            // Render Hand (Solutions)
+            handCards.forEach(card => {
+                const cardEl = createCardElement(card, 'solution');
+                if (selectedSolution && selectedSolution.id === card.id) {
+                    cardEl.classList.add('selected');
+                }
+                cardEl.onclick = () => handleHandClick(card);
+                handContainer.appendChild(cardEl);
+            });
+
+            // Check Win Condition
+            if (tableCards.length === 0 && handCards.length === 0) {
+                showToast(`مبروك! قفلت اللعبة سكور: ${score}`, 5000);
+            }
+        }
+
+        function createCardElement(data, type) {
+            const el = document.createElement('div');
+            el.className = `card ${type}`;
+            el.innerHTML = `
+                <h3>${data.text}</h3>
+                <p>${data.desc}</p>
+            `;
+            return el;
+        }
+
+        // --- Logic ---
+        function handleHandClick(card) {
+            if (selectedSolution && selectedSolution.id === card.id) {
+                selectedSolution = null; // Deselect
+            } else {
+                selectedSolution = card;
+                playSound('select');
+            }
+            render();
+        }
+
+        function handleTableClick(problemCard, problemEl) {
+            if (!selectedSolution) {
+                showToast("اختار حل من تحت الأول!", 1000);
+                return;
+            }
+
+            // Check Match
+            if (selectedSolution.category === problemCard.category) {
+                // Match!
+                handleMatch(selectedSolution, problemCard, problemEl);
+            } else {
+                // Fail
+                handleFail(problemEl);
+            }
+        }
+
+        function handleMatch(solution, problem, problemEl) {
+            playSound('match');
+            showToast("بووووم! حليتها صح ✅", 1000);
+            updateScore(score + 100);
+
+            // Animate removal
+            const solutionEl = Array.from(document.querySelectorAll('.card.solution')).find(el => el.innerHTML.includes(solution.text));
+            
+            if(solutionEl) solutionEl.classList.add('pop');
+            problemEl.classList.add('pop');
+
+            setTimeout(() => {
+                // Remove from arrays
+                tableCards = tableCards.filter(c => c.id !== problem.id);
+                handCards = handCards.filter(c => c.id !== solution.id);
+                selectedSolution = null;
+
+                // Refill if deck has cards
+                if (deck.problems.length > 0) {
+                    tableCards.push(deck.problems.pop());
+                }
+                if (deck.solutions.length > 0) {
+                    handCards.push(deck.solutions.pop());
+                }
+
+                render();
+            }, 400);
+        }
+
+        function handleFail(problemEl) {
+            playSound('error');
+            showToast("لأ مش ده الحل.. ركز ❌", 1000);
+            updateScore(score - 10);
+            problemEl.classList.add('shake');
+            setTimeout(() => problemEl.classList.remove('shake'), 400);
+            selectedSolution = null;
+            render();
+        }
+
+        function updateScore(newScore) {
+            score = newScore;
+            document.getElementById('score').innerText = score;
+        }
+
+        function showToast(msg, duration) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.style.opacity = '1';
+            setTimeout(() => {
+                toast.style.opacity = '0';
+            }, duration);
+        }
+
+        function playSound(type) {
+            // Simple synth sounds to avoid external assets
+            // In a real game, use Audio object with mp3
+            // This is just a placeholder logic for now
+            // console.log("Sound:", type); 
+        }
+
+        // Start
+        initGame();
+    </script>
+</body>
+</html>
