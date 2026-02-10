@@ -1,89 +1,126 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ديزاين ديت - Design Debt</title>
+    <title>ديزاين ديت 💀 - Cyberpunk Edition</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap"
+        rel="stylesheet">
     <style>
         :root {
-            --bg-color: #1e1e1e;
-            --card-bg: rgba(255, 255, 255, 0.05);
+            --bg-dark: #0a0a12;
             --neon-green: #00ff9d;
             --neon-red: #ff0055;
             --neon-blue: #00d2ff;
-            --text-color: #ffffff;
+            --neon-purple: #bc13fe;
+            --glass-bg: rgba(255, 255, 255, 0.03);
             --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+            --text-main: #e0e0e0;
         }
 
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
             height: 100vh;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
+            perspective: 1000px;
         }
 
-        /* Scanlines Effect */
-        body::before {
-            content: "";
+        /* Cyberpunk Grid Background */
+        .cyber-grid {
             position: absolute;
+            width: 200%;
+            height: 200%;
+            background-image:
+                linear-gradient(var(--neon-purple) 1px, transparent 1px),
+                linear-gradient(90deg, var(--neon-purple) 1px, transparent 1px);
+            background-size: 50px 50px;
+            background-position: center bottom;
+            transform: perspective(500px) rotateX(60deg) translateY(-100px) translateZ(-200px);
+            opacity: 0.15;
+            animation: gridMove 20s linear infinite;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        @keyframes gridMove {
+            0% {
+                transform: perspective(500px) rotateX(60deg) translateY(0) translateZ(-200px);
+            }
+
+            100% {
+                transform: perspective(500px) rotateX(60deg) translateY(50px) translateZ(-200px);
+            }
+        }
+
+        /* CRT Scanline Overlay */
+        .scanlines {
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(
-                to bottom,
-                rgba(255, 255, 255, 0),
-                rgba(255, 255, 255, 0) 50%,
-                rgba(0, 0, 0, 0.2) 50%,
-                rgba(0, 0, 0, 0.2)
-            );
+            background: linear-gradient(to bottom,
+                    rgba(18, 16, 16, 0) 50%,
+                    rgba(0, 0, 0, 0.25) 50%);
             background-size: 100% 4px;
             pointer-events: none;
-            z-index: 10;
+            z-index: 100;
         }
 
         header {
             text-align: center;
-            padding: 20px;
-            width: 100%;
-            background: rgba(0, 0, 0, 0.3);
+            padding: 15px 30px;
+            width: 90%;
+            margin-top: 20px;
+            background: rgba(10, 10, 18, 0.6);
             backdrop-filter: blur(10px);
-            border-bottom: var(--glass-border);
+            border: var(--glass-border);
+            border-radius: 15px;
             z-index: 20;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-sizing: border-box;
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.15);
         }
 
         h1 {
             margin: 0;
-            font-size: 1.5rem;
-            text-shadow: 0 0 10px var(--neon-blue);
-            letter-spacing: 1px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
+            letter-spacing: 2px;
         }
 
         .score-board {
-            font-size: 1.2rem;
-            font-weight: bold;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
             color: var(--neon-green);
+            text-shadow: 0 0 10px var(--neon-green);
         }
 
         .game-area {
             flex-grow: 1;
             width: 100%;
-            max-width: 800px;
+            max-width: 900px;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            gap: 20px;
+            gap: 30px;
             padding: 20px;
             box-sizing: border-box;
             z-index: 15;
@@ -91,28 +128,45 @@
 
         .section-title {
             text-align: center;
-            font-size: 0.9rem;
-            opacity: 0.7;
-            margin-bottom: 10px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 15px;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .section-title::before,
+        .section-title::after {
+            content: '';
+            width: 50px;
+            height: 1px;
+            background: var(--neon-blue);
+            opacity: 0.5;
         }
 
         .card-container {
             display: flex;
             justify-content: center;
-            gap: 15px;
+            gap: 20px;
             flex-wrap: wrap;
-            min-height: 160px; /* Placeholder height */
+            perspective: 1000px;
+            /* Enable 3D space */
         }
 
+        /* 3D Card Styles */
         .card {
-            width: 130px;
-            height: 180px;
-            background: var(--card-bg);
-            border-radius: 12px;
-            border: var(--glass-border);
-            backdrop-filter: blur(5px);
+            width: 140px;
+            height: 200px;
+            background: rgba(20, 20, 30, 0.6);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            /* Fainter border */
+            backdrop-filter: blur(12px);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -120,230 +174,357 @@
             padding: 15px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             position: relative;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+            /* Smooth tilt */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             user-select: none;
+            overflow: hidden;
+            /* For shine effect */
         }
 
-        .card:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
-        }
-
+        /* Type Indicators */
         .card.problem {
-            border-bottom: 4px solid var(--neon-red);
+            box-shadow: 0 0 15px rgba(255, 0, 85, 0.1);
+            border-bottom: 3px solid var(--neon-red);
+        }
+
+        .card.solution {
+            box-shadow: 0 0 15px rgba(0, 255, 157, 0.1);
+            border-bottom: 3px solid var(--neon-green);
+        }
+
+        /* Hover & Selected States */
+        .card:hover {
+            z-index: 10;
+            /* Bring to front */
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .card.solution.selected {
+            box-shadow: 0 0 30px var(--neon-green), inset 0 0 20px rgba(0, 255, 157, 0.2);
+            border: 2px solid var(--neon-green);
+            transform: translateY(-10px) scale(1.05) !important;
+            /* Force scale on selection */
+        }
+
+        /* Card Content */
+        .card h3 {
+            margin: 0 0 15px 0;
+            font-size: 1.1rem;
+            font-weight: 700;
+            z-index: 2;
+            transform: translateZ(20px);
+            /* Pop out text */
         }
 
         .card.problem h3 {
             color: var(--neon-red);
-            font-family: 'Courier New', monospace; /* Glitch tech vibe */
+            text-shadow: 0 0 5px var(--neon-red);
         }
 
-        .card.solution {
-            border-bottom: 4px solid var(--neon-green);
-        }
-
-        .card.solution.selected {
-            box-shadow: 0 0 20px var(--neon-green);
-            border: 2px solid var(--neon-green);
-            background: rgba(0, 255, 157, 0.1);
-        }
-
-        .card h3 {
-            margin: 0 0 10px 0;
-            font-size: 1rem;
+        .card.solution h3 {
+            color: var(--neon-green);
+            text-shadow: 0 0 5px var(--neon-green);
         }
 
         .card p {
             margin: 0;
-            font-size: 0.8rem;
-            opacity: 0.8;
+            font-size: 0.85rem;
+            color: #aaa;
             line-height: 1.4;
+            transform: translateZ(10px);
+        }
+
+        /* Shine Effect */
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: skewX(-25deg);
+            transition: 0.5s;
+        }
+
+        .card:hover::after {
+            left: 150%;
+            transition: 0.7s;
         }
 
         /* Animations */
         @keyframes shake {
-            0% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            50% { transform: translateX(5px); }
-            75% { transform: translateX(-5px); }
-            100% { transform: translateX(0); }
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            20% {
+                transform: translateX(-8px) rotate(-5deg);
+            }
+
+            40% {
+                transform: translateX(8px) rotate(5deg);
+            }
+
+            60% {
+                transform: translateX(-8px) rotate(-5deg);
+            }
+
+            80% {
+                transform: translateX(8px) rotate(5deg);
+            }
         }
 
-        @keyframes pop {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.2); opacity: 0.8; }
-            100% { transform: scale(0); opacity: 0; }
+        @keyframes popOut {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.4);
+                opacity: 0;
+                filter: blur(4px);
+            }
+
+            100% {
+                transform: scale(0);
+                opacity: 0;
+            }
         }
 
         .shake {
             animation: shake 0.4s ease-in-out;
             border-color: var(--neon-red) !important;
+            box-shadow: 0 0 20px var(--neon-red) !important;
         }
 
         .pop {
-            animation: pop 0.4s forwards;
+            animation: popOut 0.5s forwards ease-out;
         }
 
+        /* Controls */
         .controls {
-            padding: 20px;
+            padding: 30px;
             z-index: 20;
             width: 100%;
             display: flex;
             justify-content: center;
-            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
         }
 
-        button {
+        .btn-cyber {
             background: transparent;
-            color: var(--neon-green);
-            font-family:inherit;
-            font-size: 1.1rem;
-            padding: 12px 30px;
-            border: 2px solid var(--neon-green);
+            color: var(--neon-blue);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            font-weight: bold;
+            padding: 15px 40px;
+            border: 2px solid var(--neon-blue);
             cursor: pointer;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
+            position: relative;
             transition: 0.3s;
-            box-shadow: 0 0 10px rgba(0, 255, 157, 0.2);
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.2);
+            clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
         }
 
-        button:hover {
-            background: var(--neon-green);
-            color: black;
-            box-shadow: 0 0 20px rgba(0, 255, 157, 0.6);
+        .btn-cyber::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 210, 255, 0.4), transparent);
+            transition: 0.5s;
         }
 
+        .btn-cyber:hover {
+            background: rgba(0, 210, 255, 0.1);
+            color: #fff;
+            box-shadow: 0 0 30px var(--neon-blue);
+            text-shadow: 0 0 8px #fff;
+        }
+
+        .btn-cyber:hover::before {
+            left: 100%;
+        }
+
+        /* Toast Notification */
         .toast {
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
-            padding: 20px 40px;
-            background: rgba(0,0,0,0.9);
-            border: 1px solid var(--neon-blue);
-            color: white;
-            font-size: 2rem;
-            border-radius: 10px;
+            transform: translate(-50%, -50%) scale(0.9);
+            padding: 25px 50px;
+            background: rgba(0, 0, 0, 0.95);
+            border: 2px solid var(--neon-green);
+            color: var(--neon-green);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.2rem;
+            border-radius: 5px;
             pointer-events: none;
             opacity: 0;
-            transition: opacity 0.3s;
-            z-index: 100;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 200;
             text-align: center;
+            text-shadow: 0 0 20px var(--neon-green);
+            box-shadow: 0 0 50px rgba(0, 255, 157, 0.3);
         }
 
+        .toast.error {
+            border-color: var(--neon-red);
+            color: var(--neon-red);
+            text-shadow: 0 0 20px var(--neon-red);
+            box-shadow: 0 0 50px rgba(255, 0, 85, 0.3);
+        }
+
+        .toast.visible {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        /* Mobile tweaks */
         @media (max-width: 600px) {
             .card {
-                width: 90px;
-                height: 120px;
-                font-size: 0.8rem;
+                width: 100px;
+                height: 140px;
             }
-            .card h3 { font-size: 0.9rem; }
-            .card p { font-size: 0.7rem; display: none; } /* Hide description on small screens */
-            .game-area { gap: 10px; padding: 10px; }
-            h1 { font-size: 1.2rem; }
+
+            .card h3 {
+                font-size: 0.9rem;
+            }
+
+            .card p {
+                display: none;
+            }
+
+            h1 {
+                font-size: 1.4rem;
+            }
+
+            .btn-cyber {
+                padding: 10px 25px;
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
+
 <body>
 
+    <div class="cyber-grid"></div>
+    <div class="scanlines"></div>
+
     <header>
-        <h1>ديزاين ديت 💀</h1>
-        <div class="score-board">النتيجة: <span id="score">0</span></div>
+        <h1>DESIGN DEBT 💀</h1>
+        <div class="score-board">SCORE: <span id="score">0</span></div>
     </header>
 
     <div class="game-area">
         <!-- Table Area -->
         <div>
-            <div class="section-title">مشاكل الموقع (عايزة حل)</div>
-            <div class="card-container" id="table-cards">
-                <!-- Cards injected here -->
-            </div>
+            <div class="section-title">⚠️ SYSTEM ERRORS (Problems)</div>
+            <div class="card-container" id="table-cards"></div>
         </div>
 
         <!-- Player Hand -->
         <div>
-            <div class="section-title">حلولك (اختار وكمل التصميم)</div>
-            <div class="card-container" id="hand-cards">
-                <!-- Cards injected here -->
-            </div>
+            <div class="section-title">🔧 PATCHES (Solutions)</div>
+            <div class="card-container" id="hand-cards"></div>
         </div>
     </div>
 
-    <div class="toast" id="toast">عاش يا مصمم!</div>
+    <div class="toast" id="toast">SYSTEM RESTORED</div>
 
     <div class="controls">
-        <button onclick="initGame()">العب تاني 🔄</button>
+        <button class="btn-cyber" onclick="initGame()">REBOOT SYSTEM 🔄</button>
     </div>
 
     <script>
-        // --- Game Data (Egyptian Slang UX) ---
-        // Categories: Technical, Visual, UX, Content
+        // --- 3D Tilt Logic ---
+        function applyTilt(e) {
+            const card = e.currentTarget;
+            if (card.classList.contains('pop')) return; // Don't tilt if animating out
+
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left; // x position within the element
+            const y = e.clientY - rect.top;  // y position within the element
+
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            const rotateX = ((y - centerY) / centerY) * -10; // Max rotation deg
+            const rotateY = ((x - centerX) / centerX) * 10;
+
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+        }
+
+        function resetTilt(e) {
+            const card = e.currentTarget;
+            if (card.classList.contains('selected')) {
+                card.style.transform = `perspective(1000px) rotateX(0) rotateY(0) translateY(-10px) scale(1.05)`;
+            } else {
+                card.style.transform = `perspective(1000px) rotateX(0) rotateY(0) scale(1)`;
+            }
+        }
+
+        // --- Game Data (Egyptian Slang + Tech Vibe) ---
         const problemData = [
-            { id: 'p1', text: 'الصفحة ضربت (404)', category: 'Technical', desc: 'اللينك بايظ واليوزر تايه' },
-            { id: 'p2', text: 'الكلام مش باين', category: 'Visual', desc: 'الخلفية غامقة والخط أسود!' },
-            { id: 'p3', text: 'الزرار فين؟', category: 'UX', desc: 'اليوزر مش لاقي زرار الشراء' },
-            { id: 'p4', text: 'الموقع تقيل', category: 'Technical', desc: 'الصور مساحتها 5 ميجا!' },
-            { id: 'p5', text: 'كلام مش مفهوم', category: 'Content', desc: 'مصطلحات معقدة محدش فاهمها' },
-            { id: 'p6', text: 'مش عارف ارجع', category: 'UX', desc: 'دخلت صفحة ومش لاقي خروج' },
-            { id: 'p7', text: 'فورم طويلة أوي', category: 'UX', desc: '20 خانة عشان يسجل دخول' },
-            { id: 'p8', text: 'الصور مكسرة', category: 'Visual', desc: 'الصور مش راضية تحمل' },
+            { id: 'p1', text: '404 ERROR', category: 'Technical', desc: 'الصفحة ضربت واليوزر تايه' },
+            { id: 'p2', text: 'LOW CONTRAST', category: 'Visual', desc: 'الكلام مش باين من الخلفية' },
+            { id: 'p3', text: 'NO CTA', category: 'UX', desc: 'اليوزر مش لاقي زرار الشراء' },
+            { id: 'p4', text: 'LAGGY UI', category: 'Technical', desc: 'الموقع تقيل جداً' },
+            { id: 'p5', text: 'JARGON', category: 'Content', desc: 'كلام معقد محدش فاهمه' },
+            { id: 'p6', text: 'TRAP DOOR', category: 'UX', desc: 'دخلت صفحة ومش عارف ارجع' },
+            { id: 'p7', text: 'LONG FORM', category: 'UX', desc: '20 خانة عشان يسجل دخول' },
+            { id: 'p8', text: 'BROKEN IMG', category: 'Visual', desc: 'الصور مش راضية تحمل' },
         ];
 
         const solutionData = [
-            { id: 's1', text: 'وديه صفحة تانية', category: 'Technical', desc: 'Redirect لصفحة شغالة' },
-            { id: 's2', text: 'ظبط الكونتراست', category: 'Visual', desc: 'خلي الكلام أبيض وواضح' },
-            { id: 's3', text: 'خلى الاكشن واضح', category: 'UX', desc: 'CTA بلون مميز وكبير' },
-            { id: 's4', text: 'ضغط الصور', category: 'Technical', desc: 'استخدم صيغة WebP' },
-            { id: 's5', text: 'بسط المعلومة', category: 'Content', desc: 'اكتب بالبلدي يا سيدي' },
-            { id: 's6', text: 'زرار رجوع', category: 'UX', desc: 'Breadcrumbs أو زرار Back' },
-            { id: 's7', text: 'قلل الخانات', category: 'UX', desc: 'الاسم والايميل بس كفاية' },
-            { id: 's8', text: 'Placeholder', category: 'Visual', desc: 'حط لون لحد ما الصورة تظهر' },
+            { id: 's1', text: 'REDIRECT', category: 'Technical', desc: 'وديه لصفحة شغالة' },
+            { id: 's2', text: 'HIGH CONTRAST', category: 'Visual', desc: 'وضح الكلام بلون فاتح' },
+            { id: 's3', text: 'BIG BUTTON', category: 'UX', desc: 'زرار واضح بلون مميز' },
+            { id: 's4', text: 'OPTIMIZE', category: 'Technical', desc: 'صغر حجم الصور والكود' },
+            { id: 's5', text: 'SIMPLIFY', category: 'Content', desc: 'اكتب بالبلدي يا سيدي' },
+            { id: 's6', text: 'BACK BTN', category: 'UX', desc: 'حط زرار رجوع واضح' },
+            { id: 's7', text: 'MINIMIZE', category: 'UX', desc: 'الاسم والايميل بس كفاية' },
+            { id: 's8', text: 'PLACEHOLDER', category: 'Visual', desc: 'لون مؤقت مكان الصورة' },
         ];
 
-        // --- Game State ---
-        let deck = [];
+        let deck = {};
         let tableCards = [];
         let handCards = [];
         let selectedSolution = null;
         let score = 0;
 
-        // --- Init ---
         function initGame() {
-            // Reset state
             score = 0;
             selectedSolution = null;
             updateScore(0);
-            
-            // Create deck pairs and shuffle
-            // We duplicate data to make a bigger deck if needed, but for now 1-to-1 mapping
-            let problems = [...problemData];
-            let solutions = [...solutionData];
-            
-            // Shuffle
-            problems.sort(() => Math.random() - 0.5);
-            solutions.sort(() => Math.random() - 0.5);
 
-            // Deal initial hands
+            let problems = [...problemData].sort(() => Math.random() - 0.5);
+            let solutions = [...solutionData].sort(() => Math.random() - 0.5);
+
             tableCards = problems.slice(0, 4);
             handCards = solutions.slice(0, 4);
-            
-            // Remaining (not really using a draw pile logic strictly like Solitaire, 
-            // but simplified for the "Debt" concept: clear what you see)
-            // For a longer game, we'd implement a full deck array. 
-            // Let's keep it simple: 4 vs 4. Win when matched. 
-            // Actually user asked for "Refilling", so let's use the rest as a "Draw Pile".
+
             deck = {
                 problems: problems.slice(4),
                 solutions: solutions.slice(4)
             };
 
             render();
-            showToast("يلا بينا ننضف الـ UX!", 2000);
+            showToast("SYSTEM REBOOTED", 2000);
         }
 
-        // --- Render ---
         function render() {
             const tableContainer = document.getElementById('table-cards');
             const handContainer = document.getElementById('hand-cards');
@@ -351,14 +532,12 @@
             tableContainer.innerHTML = '';
             handContainer.innerHTML = '';
 
-            // Render Table (Problems)
             tableCards.forEach(card => {
                 const cardEl = createCardElement(card, 'problem');
                 cardEl.onclick = () => handleTableClick(card, cardEl);
                 tableContainer.appendChild(cardEl);
             });
 
-            // Render Hand (Solutions)
             handCards.forEach(card => {
                 const cardEl = createCardElement(card, 'solution');
                 if (selectedSolution && selectedSolution.id === card.id) {
@@ -367,11 +546,6 @@
                 cardEl.onclick = () => handleHandClick(card);
                 handContainer.appendChild(cardEl);
             });
-
-            // Check Win Condition
-            if (tableCards.length === 0 && handCards.length === 0) {
-                showToast(`مبروك! قفلت اللعبة سكور: ${score}`, 5000);
-            }
         }
 
         function createCardElement(data, type) {
@@ -381,68 +555,60 @@
                 <h3>${data.text}</h3>
                 <p>${data.desc}</p>
             `;
+            // Add Visual Event Listeners
+            el.addEventListener('mousemove', applyTilt);
+            el.addEventListener('mouseleave', resetTilt);
             return el;
         }
 
-        // --- Logic ---
         function handleHandClick(card) {
             if (selectedSolution && selectedSolution.id === card.id) {
-                selectedSolution = null; // Deselect
+                selectedSolution = null;
             } else {
                 selectedSolution = card;
-                playSound('select');
             }
             render();
         }
 
         function handleTableClick(problemCard, problemEl) {
             if (!selectedSolution) {
-                showToast("اختار حل من تحت الأول!", 1000);
+                showToast("SELECT PATCH FIRST", 1500, true);
                 return;
             }
 
-            // Check Match
             if (selectedSolution.category === problemCard.category) {
-                // Match!
                 handleMatch(selectedSolution, problemCard, problemEl);
             } else {
-                // Fail
                 handleFail(problemEl);
             }
         }
 
         function handleMatch(solution, problem, problemEl) {
-            playSound('match');
-            showToast("بووووم! حليتها صح ✅", 1000);
+            showToast("PATCH CONFIRMED ✅", 1500);
             updateScore(score + 100);
 
-            // Animate removal
             const solutionEl = Array.from(document.querySelectorAll('.card.solution')).find(el => el.innerHTML.includes(solution.text));
-            
-            if(solutionEl) solutionEl.classList.add('pop');
+
+            if (solutionEl) solutionEl.classList.add('pop');
             problemEl.classList.add('pop');
 
             setTimeout(() => {
-                // Remove from arrays
                 tableCards = tableCards.filter(c => c.id !== problem.id);
                 handCards = handCards.filter(c => c.id !== solution.id);
                 selectedSolution = null;
 
-                // Refill if deck has cards
-                if (deck.problems.length > 0) {
-                    tableCards.push(deck.problems.pop());
-                }
-                if (deck.solutions.length > 0) {
-                    handCards.push(deck.solutions.pop());
-                }
+                if (deck.problems.length > 0) tableCards.push(deck.problems.pop());
+                if (deck.solutions.length > 0) handCards.push(deck.solutions.pop());
 
                 render();
-            }, 400);
+                if (tableCards.length === 0 && handCards.length === 0) {
+                    showToast(`ALL SYSTEMS GO! SCORE: ${score}`, 5000);
+                }
+            }, 500);
         }
 
         function handleFail(problemEl) {
-            playSound('error');
-            showToast("لأ مش ده الحل.. ركز ❌", 1000);
+            showToast("CONFLICT DETECTED ❌", 1500, true);
             updateScore(score - 10);
             problemEl.classList.add('shake');
             setTimeout(() => problemEl.classList.remove('shake'), 400);
@@ -452,27 +618,24 @@
 
         function updateScore(newScore) {
             score = newScore;
-            document.getElementById('score').innerText = score;
+            const scoreEl = document.getElementById('score');
+            scoreEl.innerText = score;
+            // Pulse animation on score change
+            scoreEl.style.textShadow = `0 0 20px ${score > 0 ? 'var(--neon-green)' : 'var(--neon-red)'}`;
+            setTimeout(() => scoreEl.style.textShadow = '0 0 10px var(--neon-green)', 300);
         }
 
-        function showToast(msg, duration) {
+        function showToast(msg, duration, isError = false) {
             const toast = document.getElementById('toast');
             toast.innerText = msg;
-            toast.style.opacity = '1';
+            toast.className = `toast visible ${isError ? 'error' : ''}`;
             setTimeout(() => {
-                toast.style.opacity = '0';
+                toast.classList.remove('visible');
             }, duration);
         }
 
-        function playSound(type) {
-            // Simple synth sounds to avoid external assets
-            // In a real game, use Audio object with mp3
-            // This is just a placeholder logic for now
-            // console.log("Sound:", type); 
-        }
-
-        // Start
         initGame();
     </script>
 </body>
+
 </html>
