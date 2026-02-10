@@ -644,7 +644,17 @@
             document.removeEventListener('touchend', endDrag);
 
             const touch = e.changedTouches ? e.changedTouches[0] : e;
-            const hit = document.elementsFromPoint(touch.clientX, touch.clientY).find(el => el.classList.contains('problem'));
+            const x = touch.clientX;
+            const y = touch.clientY;
+
+            // Use AABB (Overlap) detection - same as checkHover
+            let hit = null;
+            document.querySelectorAll('.card.problem').forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (x > rect.left && x < rect.right && y > rect.top && y < rect.bottom) {
+                    hit = el;
+                }
+            });
 
             if (hit && hit.dataset.id === activeDrag.id) {
                 success(hit);
