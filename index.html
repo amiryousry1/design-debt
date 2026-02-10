@@ -4,292 +4,219 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ديزاين ديت 💀 - Cyberpunk Edition</title>
+    <title>Design Debt - Master Edition</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;500;700&display=swap"
         rel="stylesheet">
     <style>
         :root {
-            --bg-dark: #0a0a12;
-            --neon-green: #00ff9d;
-            --neon-red: #ff0055;
-            --neon-blue: #00d2ff;
-            --neon-purple: #bc13fe;
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
-            --text-main: #e0e0e0;
+            --bg-color: #f8f9fa;
+            --text-color: #212529;
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --success-color: #27ae60;
+            --error-color: #e74c3c;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+            --card-active-shadow: 0 10px 20px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.1);
         }
 
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Rajdhani', sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-main);
+            font-family: 'IBM Plex Sans Arabic', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             height: 100vh;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: space-between;
-            perspective: 1000px;
+            justify-content: center;
         }
 
-        /* Cyberpunk Grid Background */
-        .cyber-grid {
-            position: absolute;
-            width: 200%;
-            height: 200%;
-            background-image:
-                linear-gradient(var(--neon-purple) 1px, transparent 1px),
-                linear-gradient(90deg, var(--neon-purple) 1px, transparent 1px);
-            background-size: 50px 50px;
-            background-position: center bottom;
-            transform: perspective(500px) rotateX(60deg) translateY(-100px) translateZ(-200px);
-            opacity: 0.15;
-            animation: gridMove 20s linear infinite;
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        @keyframes gridMove {
-            0% {
-                transform: perspective(500px) rotateX(60deg) translateY(0) translateZ(-200px);
-            }
-
-            100% {
-                transform: perspective(500px) rotateX(60deg) translateY(50px) translateZ(-200px);
-            }
-        }
-
-        /* CRT Scanline Overlay */
-        .scanlines {
+        /* Introduction Overlap */
+        .overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(to bottom,
-                    rgba(18, 16, 16, 0) 50%,
-                    rgba(0, 0, 0, 0.25) 50%);
-            background-size: 100% 4px;
-            pointer-events: none;
-            z-index: 100;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            text-align: center;
+            padding: 20px;
         }
 
+        .overlay h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .overlay p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(44, 62, 80, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(44, 62, 80, 0.4);
+        }
+
+        /* Game Header */
         header {
-            text-align: center;
-            padding: 15px 30px;
             width: 90%;
-            margin-top: 20px;
-            background: rgba(10, 10, 18, 0.6);
-            backdrop-filter: blur(10px);
-            border: var(--glass-border);
-            border-radius: 15px;
-            z-index: 20;
+            max-width: 1200px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 0 20px rgba(0, 210, 255, 0.15);
+            padding: 20px 0;
+            border-bottom: 2px solid #e9ecef;
+            margin-bottom: 20px;
         }
 
-        h1 {
-            margin: 0;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.8rem;
-            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
-            letter-spacing: 2px;
+        .level-badge {
+            background: var(--accent-color);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
         }
 
-        .score-board {
-            font-family: 'Orbitron', sans-serif;
+        .score-display {
             font-size: 1.5rem;
-            color: var(--neon-green);
-            text-shadow: 0 0 10px var(--neon-green);
+            font-weight: bold;
+            color: var(--primary-color);
         }
 
-        .game-area {
-            flex-grow: 1;
+        /* Game Area */
+        .game-board {
             width: 100%;
-            max-width: 900px;
+            max-width: 1200px;
+            height: 70vh;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            gap: 30px;
+            justify-content: space-between;
             padding: 20px;
             box-sizing: border-box;
-            z-index: 15;
         }
 
-        .section-title {
+        .zone-label {
             text-align: center;
-            font-family: 'Orbitron', sans-serif;
             font-size: 1rem;
-            color: rgba(255, 255, 255, 0.6);
-            margin-bottom: 15px;
+            color: #bdc3c7;
             text-transform: uppercase;
-            letter-spacing: 3px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            font-weight: 500;
         }
 
-        .section-title::before,
-        .section-title::after {
-            content: '';
-            width: 50px;
-            height: 1px;
-            background: var(--neon-blue);
-            opacity: 0.5;
-        }
-
-        .card-container {
+        .card-row {
             display: flex;
             justify-content: center;
             gap: 20px;
-            flex-wrap: wrap;
+            min-height: 220px;
             perspective: 1000px;
-            /* Enable 3D space */
         }
 
-        /* 3D Card Styles */
+        /* Card Styles */
         .card {
-            width: 140px;
-            height: 200px;
-            background: rgba(20, 20, 30, 0.6);
-            border-radius: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            /* Fainter border */
-            backdrop-filter: blur(12px);
+            width: 160px;
+            height: 240px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 15px;
+            padding: 20px;
             text-align: center;
-            cursor: pointer;
+            cursor: grab;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             position: relative;
-            transform-style: preserve-3d;
-            transition: transform 0.1s ease-out;
-            /* Smooth tilt */
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             user-select: none;
-            overflow: hidden;
-            /* For shine effect */
+            border: 1px solid #eee;
         }
 
-        /* Type Indicators */
-        .card.problem {
-            box-shadow: 0 0 15px rgba(255, 0, 85, 0.1);
-            border-bottom: 3px solid var(--neon-red);
-        }
-
-        .card.solution {
-            box-shadow: 0 0 15px rgba(0, 255, 157, 0.1);
-            border-bottom: 3px solid var(--neon-green);
-        }
-
-        /* Hover & Selected States */
         .card:hover {
-            z-index: 10;
-            /* Bring to front */
-            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-5px);
+            box-shadow: var(--card-active-shadow);
         }
 
-        .card.solution.selected {
-            box-shadow: 0 0 30px var(--neon-green), inset 0 0 20px rgba(0, 255, 157, 0.2);
-            border: 2px solid var(--neon-green);
-            transform: translateY(-10px) scale(1.05) !important;
-            /* Force scale on selection */
+        .card.dragging {
+            opacity: 0.5;
+            transform: scale(0.95);
+            cursor: grabbing;
         }
 
-        /* Card Content */
-        .card h3 {
-            margin: 0 0 15px 0;
+        .card-type {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #95a5a6;
+            margin-bottom: 10px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .card-title {
             font-size: 1.1rem;
             font-weight: 700;
-            z-index: 2;
-            transform: translateZ(20px);
-            /* Pop out text */
-        }
-
-        .card.problem h3 {
-            color: var(--neon-red);
-            text-shadow: 0 0 5px var(--neon-red);
-        }
-
-        .card.solution h3 {
-            color: var(--neon-green);
-            text-shadow: 0 0 5px var(--neon-green);
-        }
-
-        .card p {
-            margin: 0;
-            font-size: 0.85rem;
-            color: #aaa;
+            color: var(--primary-color);
+            margin-bottom: 10px;
             line-height: 1.4;
-            transform: translateZ(10px);
         }
 
-        /* Shine Effect */
-        .card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 50%;
-            height: 100%;
-            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transform: skewX(-25deg);
-            transition: 0.5s;
+        .card-desc {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            line-height: 1.5;
         }
 
-        .card:hover::after {
-            left: 150%;
-            transition: 0.7s;
+        /* Problem Card specific */
+        .card.problem {
+            border-top: 5px solid var(--error-color);
+            background: #fff5f5;
+            /* Slight red tint */
         }
 
-        /* Animations */
-        @keyframes shake {
-
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-
-            20% {
-                transform: translateX(-8px) rotate(-5deg);
-            }
-
-            40% {
-                transform: translateX(8px) rotate(5deg);
-            }
-
-            60% {
-                transform: translateX(-8px) rotate(-5deg);
-            }
-
-            80% {
-                transform: translateX(8px) rotate(5deg);
-            }
+        /* Solution Card specific */
+        .card.solution {
+            border-top: 5px solid var(--success-color);
+            background: #f0fff4;
+            /* Slight green tint */
         }
 
-        @keyframes popOut {
+        /* Feedback Animations */
+        @keyframes successPop {
             0% {
                 transform: scale(1);
                 opacity: 1;
             }
 
             50% {
-                transform: scale(1.4);
-                opacity: 0;
-                filter: blur(4px);
+                transform: scale(1.1);
+                opacity: 0.8;
             }
 
             100% {
@@ -298,121 +225,101 @@
             }
         }
 
-        .shake {
-            animation: shake 0.4s ease-in-out;
-            border-color: var(--neon-red) !important;
-            box-shadow: 0 0 20px var(--neon-red) !important;
+        @keyframes failShake {
+            0% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-10px);
+            }
+
+            50% {
+                transform: translateX(10px);
+            }
+
+            75% {
+                transform: translateX(-10px);
+            }
+
+            100% {
+                transform: translateX(0);
+            }
         }
 
-        .pop {
-            animation: popOut 0.5s forwards ease-out;
+        .animate-success {
+            animation: successPop 0.5s forwards ease-in;
         }
 
-        /* Controls */
-        .controls {
-            padding: 30px;
-            z-index: 20;
-            width: 100%;
-            display: flex;
-            justify-content: center;
+        .animate-fail {
+            animation: failShake 0.4s ease-in-out;
+            border-color: var(--error-color) !important;
         }
 
-        .btn-cyber {
-            background: transparent;
-            color: var(--neon-blue);
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.2rem;
-            font-weight: bold;
-            padding: 15px 40px;
-            border: 2px solid var(--neon-blue);
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            position: relative;
-            transition: 0.3s;
-            overflow: hidden;
-            box-shadow: 0 0 15px rgba(0, 210, 255, 0.2);
-            clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
+        .drag-target {
+            border: 2px dashed #bdc3c7;
+            background: rgba(0, 0, 0, 0.02);
         }
 
-        .btn-cyber::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 210, 255, 0.4), transparent);
-            transition: 0.5s;
-        }
-
-        .btn-cyber:hover {
-            background: rgba(0, 210, 255, 0.1);
-            color: #fff;
-            box-shadow: 0 0 30px var(--neon-blue);
-            text-shadow: 0 0 8px #fff;
-        }
-
-        .btn-cyber:hover::before {
-            left: 100%;
+        .drag-over {
+            border-color: var(--accent-color);
+            background: rgba(52, 152, 219, 0.1);
+            transform: scale(1.02);
         }
 
         /* Toast Notification */
         .toast {
-            position: absolute;
-            top: 50%;
+            position: fixed;
+            bottom: 30px;
             left: 50%;
-            transform: translate(-50%, -50%) scale(0.9);
-            padding: 25px 50px;
-            background: rgba(0, 0, 0, 0.95);
-            border: 2px solid var(--neon-green);
-            color: var(--neon-green);
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2.2rem;
-            border-radius: 5px;
-            pointer-events: none;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--primary-color);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 500;
             opacity: 0;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 200;
-            text-align: center;
-            text-shadow: 0 0 20px var(--neon-green);
-            box-shadow: 0 0 50px rgba(0, 255, 157, 0.3);
-        }
-
-        .toast.error {
-            border-color: var(--neon-red);
-            color: var(--neon-red);
-            text-shadow: 0 0 20px var(--neon-red);
-            box-shadow: 0 0 50px rgba(255, 0, 85, 0.3);
+            transition: all 0.3s;
+            z-index: 2000;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
         .toast.visible {
+            transform: translateX(-50%) translateY(0);
             opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
         }
 
-        /* Mobile tweaks */
-        @media (max-width: 600px) {
+        .toast.success {
+            background: var(--success-color);
+        }
+
+        .toast.error {
+            background: var(--error-color);
+        }
+
+        /* Media Queries */
+        @media (max-width: 768px) {
             .card {
-                width: 100px;
-                height: 140px;
+                width: 130px;
+                height: 180px;
+                padding: 10px;
             }
 
-            .card h3 {
+            .card-title {
                 font-size: 0.9rem;
             }
 
-            .card p {
+            .card-desc {
                 display: none;
             }
 
             h1 {
-                font-size: 1.4rem;
+                font-size: 2rem;
             }
 
-            .btn-cyber {
-                padding: 10px 25px;
-                font-size: 1rem;
+            .game-board {
+                height: 80vh;
+                padding: 10px;
             }
         }
     </style>
@@ -420,221 +327,299 @@
 
 <body>
 
-    <div class="cyber-grid"></div>
-    <div class="scanlines"></div>
+    <!-- Intro / Rules Overlay -->
+    <div class="overlay" id="intro-screen">
+        <h1>Design Debt 🃏</h1>
+        <p>أهلاً بيك يا فنان! دي مش مجرد لعبة، ده تدريب حقيقي.</p>
+        <p>
+            <strong>القواعد:</strong><br>
+            1. اسحب كارت "الحل" (الأخضر) وحطه فوق كارت "المشكلة" (الأحمر).<br>
+            2. كل حل صح = <strong>+10 نقط</strong>.<br>
+            3. أي غلطة = <strong>-5 نقط</strong>.<br>
+            4. عندك <strong>5 مستويات</strong>، الصعوبة بتزيد مع كل مرحلة.
+        </p>
+        <button class="btn" onclick="startGame()">يلا نبدأ 🚀</button>
+    </div>
+
+    <!-- Level Complete Overlay -->
+    <div class="overlay" id="level-screen" style="display: none;">
+        <h1>عاش يا وحش! 🎉</h1>
+        <p id="level-msg">خلصت المستوى ده بنجاح.</p>
+        <button class="btn" onclick="nextLevel()">المستوى اللي بعده ⏭️</button>
+    </div>
+
+    <!-- Game Over Overlay -->
+    <div class="overlay" id="end-screen" style="display: none;">
+        <h1>اللعبة خلصت! 🏆</h1>
+        <p>السكور النهائي: <strong id="final-score" style="font-size: 2rem; display:block; margin-top:10px;">0</strong>
+        </p>
+        <button class="btn" onclick="location.reload()">العب تاني 🔄</button>
+    </div>
 
     <header>
-        <h1>DESIGN DEBT 💀</h1>
-        <div class="score-board">SCORE: <span id="score">0</span></div>
+        <div>
+            <span class="level-badge" id="level-indicator">المستوى 1</span>
+        </div>
+        <div class="score-display">النقاط: <span id="score">0</span></div>
     </header>
 
-    <div class="game-area">
-        <!-- Table Area -->
+    <div class="game-board">
+        <!-- Problem Zone (Drop Targets) -->
         <div>
-            <div class="section-title">⚠️ SYSTEM ERRORS (Problems)</div>
-            <div class="card-container" id="table-cards"></div>
+            <div class="zone-label">المشاكل (حط الحل هنا)</div>
+            <div class="card-row" id="problem-area"></div>
         </div>
 
-        <!-- Player Hand -->
+        <!-- Solution Zone (Draggables) -->
         <div>
-            <div class="section-title">🔧 PATCHES (Solutions)</div>
-            <div class="card-container" id="hand-cards"></div>
+            <div class="zone-label">كروت الحل (اسحب الكارت)</div>
+            <div class="card-row" id="solution-area"></div>
         </div>
     </div>
 
-    <div class="toast" id="toast">SYSTEM RESTORED</div>
-
-    <div class="controls">
-        <button class="btn-cyber" onclick="initGame()">REBOOT SYSTEM 🔄</button>
-    </div>
+    <div class="toast" id="toast">رسالة</div>
 
     <script>
-        // --- 3D Tilt Logic ---
-        function applyTilt(e) {
-            const card = e.currentTarget;
-            if (card.classList.contains('pop')) return; // Don't tilt if animating out
-
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left; // x position within the element
-            const y = e.clientY - rect.top;  // y position within the element
-
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-
-            const rotateX = ((y - centerY) / centerY) * -10; // Max rotation deg
-            const rotateY = ((x - centerX) / centerX) * 10;
-
-            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
-        }
-
-        function resetTilt(e) {
-            const card = e.currentTarget;
-            if (card.classList.contains('selected')) {
-                card.style.transform = `perspective(1000px) rotateX(0) rotateY(0) translateY(-10px) scale(1.05)`;
-            } else {
-                card.style.transform = `perspective(1000px) rotateX(0) rotateY(0) scale(1)`;
+        // --- Levels Data (Progressive Difficulty) ---
+        const levels = [
+            {
+                name: "Level 1: الأساسيات (Visuals)",
+                pairs: [
+                    { p: { text: "Low Contrast", desc: "الكلام رمادي على خلفية رمادي!" }, s: { text: "High Contrast", desc: "خلي الكلام أسود وواضح" } },
+                    { p: { text: "Broken Image", desc: "أيقونة صورة مش بتحمل" }, s: { text: "Alt Text", desc: "وصف للصورة لو وقعت" } },
+                    { p: { text: "Tiny Font", desc: "خط حجمه 10px مش يتشاف" }, s: { text: "16px Base", desc: "كبر الخط للقراءة" } },
+                    { p: { text: "Blue Link", desc: "لينك أزرق على خلفية زرقاء" }, s: { text: "Color Theory", desc: "استخدم ألوان مكملة" } }
+                ]
+            },
+            {
+                name: "Level 2: التوهان (Navigation)",
+                pairs: [
+                    { p: { text: "Dead End", desc: "صفحة ملهاش زرار خروج" }, s: { text: "Back Button", desc: "زرار يرجعك للي قبله" } },
+                    { p: { text: "Mystery Meat", desc: "زرار مش مكتوب عليه بيعمل ايه" }, s: { text: "Labeling", desc: "اكتب اسم الزرار بوضوح" } },
+                    { p: { text: "Burger Menu", desc: "القائمة مخفية في الديسك توب" }, s: { text: "Visible Links", desc: "طلع اللينكات المهمة بره" } },
+                    { p: { text: "404 Error", desc: "صفحة مش موجودة" }, s: { text: "Redirection", desc: "وديه للصفحة الرئيسية" } }
+                ]
+            },
+            {
+                name: "Level 3: السرعة (Performance)",
+                pairs: [
+                    { p: { text: "Slow Loading", desc: "الموقع بياخد 10 ثواني" }, s: { text: "Lazy Load", desc: "حمل الصور لما نحتاجها بس" } },
+                    { p: { text: "Huge Video", desc: "فيديو 500 ميجا في الهيدر" }, s: { text: "Compression", desc: "اضغط الفيديو لـ WebM" } },
+                    { p: { text: "Render Block", desc: "الشاشة بيضاء لحد ما يحمل" }, s: { text: "Async JS", desc: "حمل السكريبت في الخلفية" } },
+                    { p: { text: "CLS Shift", desc: "العناصر بتنط لما تحمل" }, s: { text: "Dimensions", desc: "حجز مكان للصور" } }
+                ]
+            },
+            {
+                name: "Level 4: الكلام (Content)",
+                pairs: [
+                    { p: { text: "Lorem Ipsum", desc: "كلام وهمي نسيناه" }, s: { text: "Real Content", desc: "اكتب محتوى حقيقي ومفيد" } },
+                    { p: { text: "Jargon", desc: "Error 0x544F Bad Gateway!" }, s: { text: "Human Design", desc: "السيرفر واقع.. جرب تاني" } },
+                    { p: { text: "Click Here", desc: "لينك اسمه 'اضغط هنا'" }, s: { text: "Descriptive", desc: "لينك 'حمل الملف'" } },
+                    { p: { text: "Wall of Text", desc: "20 سطر ورا بعض" }, s: { text: "Typography", desc: "قسم الكلام لعناوين ونقط" } }
+                ]
+            },
+            {
+                name: "Level 5: الوحش (System Architecture)",
+                pairs: [
+                    { p: { text: "Spaghetti Code", desc: "كود متداخل وصعب التعديل" }, s: { text: "Refactoring", desc: "نظم الكود في Modules" } },
+                    { p: { text: "Security Leak", desc: "الباسورد باين في اللينك" }, s: { text: "Encryption", desc: "شفر البيانات المهمة" } },
+                    { p: { text: "Not Responsive", desc: "الموقع بايظ على الموبايل" }, s: { text: "Media Queries", desc: "ظبط المقاسات لكل شاشة" } },
+                    { p: { text: "No Feedback", desc: "دوست ومحصلش حاجة" }, s: { text: "States", desc: "Loading Spinner أو رسالة" } }
+                ]
             }
-        }
-
-        // --- Game Data (Egyptian Slang + Tech Vibe) ---
-        const problemData = [
-            { id: 'p1', text: '404 ERROR', category: 'Technical', desc: 'الصفحة ضربت واليوزر تايه' },
-            { id: 'p2', text: 'LOW CONTRAST', category: 'Visual', desc: 'الكلام مش باين من الخلفية' },
-            { id: 'p3', text: 'NO CTA', category: 'UX', desc: 'اليوزر مش لاقي زرار الشراء' },
-            { id: 'p4', text: 'LAGGY UI', category: 'Technical', desc: 'الموقع تقيل جداً' },
-            { id: 'p5', text: 'JARGON', category: 'Content', desc: 'كلام معقد محدش فاهمه' },
-            { id: 'p6', text: 'TRAP DOOR', category: 'UX', desc: 'دخلت صفحة ومش عارف ارجع' },
-            { id: 'p7', text: 'LONG FORM', category: 'UX', desc: '20 خانة عشان يسجل دخول' },
-            { id: 'p8', text: 'BROKEN IMG', category: 'Visual', desc: 'الصور مش راضية تحمل' },
         ];
 
-        const solutionData = [
-            { id: 's1', text: 'REDIRECT', category: 'Technical', desc: 'وديه لصفحة شغالة' },
-            { id: 's2', text: 'HIGH CONTRAST', category: 'Visual', desc: 'وضح الكلام بلون فاتح' },
-            { id: 's3', text: 'BIG BUTTON', category: 'UX', desc: 'زرار واضح بلون مميز' },
-            { id: 's4', text: 'OPTIMIZE', category: 'Technical', desc: 'صغر حجم الصور والكود' },
-            { id: 's5', text: 'SIMPLIFY', category: 'Content', desc: 'اكتب بالبلدي يا سيدي' },
-            { id: 's6', text: 'BACK BTN', category: 'UX', desc: 'حط زرار رجوع واضح' },
-            { id: 's7', text: 'MINIMIZE', category: 'UX', desc: 'الاسم والايميل بس كفاية' },
-            { id: 's8', text: 'PLACEHOLDER', category: 'Visual', desc: 'لون مؤقت مكان الصورة' },
-        ];
-
-        let deck = {};
-        let tableCards = [];
-        let handCards = [];
-        let selectedSolution = null;
+        // --- Game State ---
+        let currentLevelIndex = 0;
         let score = 0;
+        let matchesInLevel = 0;
+        let draggedCard = null;
 
-        function initGame() {
-            score = 0;
-            selectedSolution = null;
-            updateScore(0);
-
-            let problems = [...problemData].sort(() => Math.random() - 0.5);
-            let solutions = [...solutionData].sort(() => Math.random() - 0.5);
-
-            tableCards = problems.slice(0, 4);
-            handCards = solutions.slice(0, 4);
-
-            deck = {
-                problems: problems.slice(4),
-                solutions: solutions.slice(4)
-            };
-
-            render();
-            showToast("SYSTEM REBOOTED", 2000);
+        // --- Init ---
+        function startGame() {
+            document.getElementById('intro-screen').style.display = 'none';
+            initLevel(0);
         }
 
-        function render() {
-            const tableContainer = document.getElementById('table-cards');
-            const handContainer = document.getElementById('hand-cards');
+        function initLevel(index) {
+            currentLevelIndex = index;
+            matchesInLevel = 0;
+            const levelData = levels[index];
 
-            tableContainer.innerHTML = '';
-            handContainer.innerHTML = '';
+            // UI Updates
+            document.getElementById('level-indicator').innerText = `المستوى ${index + 1} / 5`;
+            document.getElementById('level-screen').style.display = 'none';
+            showToast(levelData.name + " .. ابدأ!", 3000);
 
-            tableCards.forEach(card => {
-                const cardEl = createCardElement(card, 'problem');
-                cardEl.onclick = () => handleTableClick(card, cardEl);
-                tableContainer.appendChild(cardEl);
+            // Prepare Cards
+            const problems = [];
+            const solutions = [];
+
+            // Add index to create match ID logic
+            levelData.pairs.forEach((pair, i) => {
+                problems.push({ ...pair.p, matchId: i, type: 'problem' });
+                solutions.push({ ...pair.s, matchId: i, type: 'solution' });
             });
 
-            handCards.forEach(card => {
-                const cardEl = createCardElement(card, 'solution');
-                if (selectedSolution && selectedSolution.id === card.id) {
-                    cardEl.classList.add('selected');
-                }
-                cardEl.onclick = () => handleHandClick(card);
-                handContainer.appendChild(cardEl);
+            // Shuffle
+            problems.sort(() => Math.random() - 0.5);
+            solutions.sort(() => Math.random() - 0.5);
+
+            renderCards(problems, solutions);
+        }
+
+        function renderCards(problems, solutions) {
+            const problemArea = document.getElementById('problem-area');
+            const solutionArea = document.getElementById('solution-area');
+
+            problemArea.innerHTML = '';
+            solutionArea.innerHTML = '';
+
+            // Render Problems (Targets)
+            problems.forEach(p => {
+                const el = createCard(p);
+                el.classList.add('problem');
+                // Drag Events for Drop Target
+                el.addEventListener('dragover', handleDragOver);
+                el.addEventListener('dragleave', handleDragLeave);
+                el.addEventListener('drop', handleDrop);
+                problemArea.appendChild(el);
+            });
+
+            // Render Solutions (Draggables)
+            solutions.forEach(s => {
+                const el = createCard(s);
+                el.classList.add('solution');
+                el.setAttribute('draggable', 'true');
+                // Drag Events for Draggable
+                el.addEventListener('dragstart', handleDragStart);
+                el.addEventListener('dragend', handleDragEnd);
+                solutionArea.appendChild(el);
             });
         }
 
-        function createCardElement(data, type) {
+        function createCard(data) {
             const el = document.createElement('div');
-            el.className = `card ${type}`;
+            el.className = 'card';
+            el.dataset.matchId = data.matchId;
+            el.dataset.type = data.type;
+
             el.innerHTML = `
-                <h3>${data.text}</h3>
-                <p>${data.desc}</p>
+                <div class="card-type">${data.type === 'problem' ? 'مشكلة' : 'حل'}</div>
+                <div class="card-title">${data.text}</div>
+                <div class="card-desc">${data.desc}</div>
             `;
-            // Add Visual Event Listeners
-            el.addEventListener('mousemove', applyTilt);
-            el.addEventListener('mouseleave', resetTilt);
             return el;
         }
 
-        function handleHandClick(card) {
-            if (selectedSolution && selectedSolution.id === card.id) {
-                selectedSolution = null;
-            } else {
-                selectedSolution = card;
-            }
-            render();
+        // --- Drag & Drop Logic ---
+        function handleDragStart(e) {
+            draggedCard = e.target;
+            e.target.classList.add('dragging');
+            e.dataTransfer.setData('text/plain', e.target.dataset.matchId);
+            e.dataTransfer.effectAllowed = 'move';
         }
 
-        function handleTableClick(problemCard, problemEl) {
-            if (!selectedSolution) {
-                showToast("SELECT PATCH FIRST", 1500, true);
-                return;
-            }
+        function handleDragEnd(e) {
+            e.target.classList.remove('dragging');
+            draggedCard = null;
+        }
 
-            if (selectedSolution.category === problemCard.category) {
-                handleMatch(selectedSolution, problemCard, problemEl);
-            } else {
-                handleFail(problemEl);
+        function handleDragOver(e) {
+            e.preventDefault(); // Essential to allow dropping
+            const card = e.currentTarget;
+            if (card.classList.contains('problem') && !card.classList.contains('animate-success')) {
+                card.classList.add('drag-over');
             }
         }
 
-        function handleMatch(solution, problem, problemEl) {
-            showToast("PATCH CONFIRMED ✅", 1500);
-            updateScore(score + 100);
+        function handleDragLeave(e) {
+            e.currentTarget.classList.remove('drag-over');
+        }
 
-            const solutionEl = Array.from(document.querySelectorAll('.card.solution')).find(el => el.innerHTML.includes(solution.text));
+        function handleDrop(e) {
+            e.preventDefault();
+            const targetCard = e.currentTarget;
+            targetCard.classList.remove('drag-over');
 
-            if (solutionEl) solutionEl.classList.add('pop');
-            problemEl.classList.add('pop');
+            const solutionMatchId = e.dataTransfer.getData('text/plain');
+            const targetMatchId = targetCard.dataset.matchId;
 
+            if (solutionMatchId === targetMatchId) {
+                // MATCH!
+                handleSuccess(targetCard, draggedCard);
+            } else {
+                // FAIL
+                handleFail(targetCard);
+            }
+        }
+
+        // --- Game Logic ---
+        function handleSuccess(problemCard, solutionCard) {
+            updateScore(10);
+            showToast("إجابة صحيحة! +10", 1500, true);
+
+            // Animate
+            problemCard.classList.add('animate-success');
+            solutionCard.classList.add('animate-success');
+
+            // Wait for anim then remove
             setTimeout(() => {
-                tableCards = tableCards.filter(c => c.id !== problem.id);
-                handCards = handCards.filter(c => c.id !== solution.id);
-                selectedSolution = null;
+                problemCard.style.visibility = 'hidden';
+                solutionCard.style.visibility = 'hidden'; // Hide but keep layout or remove? 
+                // Let's remove from dom to clean up space
+                problemCard.remove();
+                solutionCard.remove();
 
-                if (deck.problems.length > 0) tableCards.push(deck.problems.pop());
-                if (deck.solutions.length > 0) handCards.push(deck.solutions.pop());
-
-                render();
-                if (tableCards.length === 0 && handCards.length === 0) {
-                    showToast(`ALL SYSTEMS GO! SCORE: ${score}`, 5000);
-                }
+                matchesInLevel++;
+                checkLevelComplete();
             }, 500);
         }
 
-        function handleFail(problemEl) {
-            showToast("CONFLICT DETECTED ❌", 1500, true);
-            updateScore(score - 10);
-            problemEl.classList.add('shake');
-            setTimeout(() => problemEl.classList.remove('shake'), 400);
-            selectedSolution = null;
-            render();
+        function handleFail(problemCard) {
+            updateScore(-5);
+            showToast("خطأ! ركز شوية -5", 1500, false);
+
+            problemCard.classList.add('animate-fail');
+            setTimeout(() => problemCard.classList.remove('animate-fail'), 400);
         }
 
-        function updateScore(newScore) {
-            score = newScore;
-            const scoreEl = document.getElementById('score');
-            scoreEl.innerText = score;
-            // Pulse animation on score change
-            scoreEl.style.textShadow = `0 0 20px ${score > 0 ? 'var(--neon-green)' : 'var(--neon-red)'}`;
-            setTimeout(() => scoreEl.style.textShadow = '0 0 10px var(--neon-green)', 300);
+        function updateScore(points) {
+            score += points;
+            document.getElementById('score').innerText = score;
         }
 
-        function showToast(msg, duration, isError = false) {
+        function checkLevelComplete() {
+            if (matchesInLevel === 4) { // 4 pairs per level
+                setTimeout(() => {
+                    if (currentLevelIndex < levels.length - 1) {
+                        document.getElementById('level-screen').style.display = 'flex';
+                        document.getElementById('level-msg').innerText = `خلصت المستوى ${currentLevelIndex + 1} بنجاح!`;
+                    } else {
+                        endGame();
+                    }
+                }, 500);
+            }
+        }
+
+        function nextLevel() {
+            initLevel(currentLevelIndex + 1);
+        }
+
+        function endGame() {
+            document.getElementById('end-screen').style.display = 'flex';
+            document.getElementById('final-score').innerText = score;
+        }
+
+        function showToast(msg, duration, isSuccess) {
             const toast = document.getElementById('toast');
             toast.innerText = msg;
-            toast.className = `toast visible ${isError ? 'error' : ''}`;
+            toast.className = `toast visible ${isSuccess === true ? 'success' : isSuccess === false ? 'error' : ''}`;
+
             setTimeout(() => {
                 toast.classList.remove('visible');
             }, duration);
         }
-
-        initGame();
     </script>
 </body>
 
